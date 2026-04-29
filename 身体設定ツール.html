@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>身体設定ツール — Arluna AI Atelier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Noto+Sans+JP:wght@300;400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:      #080f0a;
+  --bg2:     #0d1a10;
+  --bg3:     #112216;
+  --green:   #2d7a4f;
+  --green2:  #3fa068;
+  --green3:  #1a4d30;
+  --emerald: #50c878;
+  --gold:    #c9a96e;
+  --gold2:   #e8d5a3;
+  --dim:     #1a3020;
+  --muted:   #4a7055;
+  --text:    #ddeee4;
+  --light:   #f0faf4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  font-weight:300;
+}
+
+/* Noise */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.03;pointer-events:none;z-index:0;
+}
+
+/* Blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(140px);opacity:.13;pointer-events:none;z-index:0;animation:blobDrift 22s ease-in-out infinite alternate}
+.blob1{width:600px;height:500px;background:#2d7a4f;top:-150px;right:-150px;animation-duration:24s}
+.blob2{width:400px;height:400px;background:#1a4d30;bottom:-100px;left:-100px;animation-duration:30s;animation-delay:-12s}
+.blob3{width:280px;height:280px;background:#c9a96e;top:50%;left:40%;opacity:.05;animation-duration:18s;animation-delay:-6s}
+@keyframes blobDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.05)}}
+
+/* V-line */
+.v-line{position:fixed;left:36px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--green3) 30%,var(--green3) 70%,transparent);opacity:.4;z-index:0}
+@media(max-width:600px){.v-line{display:none}}
+
+/* Page */
+.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 20px 100px}
+
+/* Header */
+header{padding:56px 0 36px;text-align:center}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:2px;color:var(--muted);text-decoration:none;margin-bottom:28px;transition:color .2s}
+.back-link:hover{color:var(--emerald)}
+.header-eyebrow{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--muted);margin-bottom:14px;text-transform:uppercase}
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,5vw,46px);
+  font-weight:600;line-height:1.15;
+  background:linear-gradient(150deg,var(--light) 0%,var(--emerald) 60%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:10px;
+  animation:fadeUp .8s .1s ease both;
+}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:.5px;line-height:1.9;animation:fadeUp .8s .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:12px;margin:36px 0 18px}
+.divider::before{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--dim))}
+.divider::after{content:'';flex:1;height:1px;background:linear-gradient(270deg,transparent,var(--dim))}
+.divider span{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+
+/* Action buttons */
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;animation:fadeUp .7s .5s ease both}
+.btn-main{
+  padding:14px 10px;font-size:13px;font-weight:700;
+  border:1px solid var(--green);border-radius:10px;
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  color:var(--emerald);cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.5px;
+  transition:all .22s;position:relative;overflow:hidden;
+}
+.btn-main::before{content:'';position:absolute;inset:0;background:var(--green);opacity:0;transition:opacity .22s}
+.btn-main:hover::before{opacity:.12}
+.btn-main:hover{border-color:var(--emerald);box-shadow:0 0 20px var(--green)44;transform:translateY(-2px)}
+.btn-special{
+  padding:14px 10px;font-size:13px;font-weight:700;
+  border:1px solid var(--gold);border-radius:10px;
+  background:linear-gradient(135deg,#1a1a0d,#120f08);
+  color:var(--gold);cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.5px;
+  transition:all .22s;position:relative;overflow:hidden;
+}
+.btn-special:hover{border-color:var(--gold2);box-shadow:0 0 24px #c9a96e55;transform:translateY(-2px)}
+
+/* Attr grid */
+.attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;animation:fadeUp .7s .55s ease both}
+.attr-box{
+  background:var(--bg2);border:1px solid var(--dim);border-radius:10px;
+  padding:16px;text-align:center;transition:border-color .2s;
+}
+.attr-box:hover{border-color:var(--green3)}
+.attr-label{font-size:10px;letter-spacing:2px;color:var(--muted);font-family:'Cinzel',serif;text-transform:uppercase;display:block;margin-bottom:10px}
+.attr-select{
+  width:100%;padding:9px;font-size:15px;font-weight:700;
+  border-radius:6px;border:1px solid var(--green3);
+  background:var(--bg3);color:var(--light);cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;text-align:center;
+}
+
+/* Special area */
+.special-box{
+  background:var(--bg2);border:1px solid #c9a96e44;border-radius:12px;
+  padding:20px;margin-bottom:6px;
+  animation:fadeUp .7s .6s ease both;
+  position:relative;overflow:hidden;
+}
+.special-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,#c9a96e08,transparent);pointer-events:none}
+.special-box-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;display:block;text-align:center;margin-bottom:12px}
+.special-select{
+  width:100%;padding:10px;font-size:13px;
+  border-radius:6px;border:1px solid #c9a96e44;
+  background:var(--bg3);color:var(--text);cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+}
+
+/* Slider rows */
+.section-block{animation:fadeUp .7s ease both}
+.item-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:6px;
+  background:var(--bg2);border:1px solid var(--dim);
+  padding:10px 14px;border-radius:10px;
+  transition:border-color .2s;
+}
+.item-row:hover{border-color:var(--green3)}
+.item-label{width:150px;font-size:12px;color:var(--text);flex-shrink:0;line-height:1.4;opacity:.85}
+.item-slider{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:4px;border-radius:2px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--emerald) 0%,var(--emerald) var(--pct,50%),var(--dim) var(--pct,50%),var(--dim) 100%);
+}
+.item-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--emerald);cursor:pointer;box-shadow:0 0 8px var(--emerald)88;border:2px solid var(--bg)}
+.item-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--emerald);cursor:pointer;border:2px solid var(--bg)}
+.item-val-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;min-width:52px}
+.item-value{font-size:18px;font-weight:700;color:var(--gold2);font-family:'Cinzel',serif;line-height:1}
+.item-word{font-size:9px;color:var(--gold);letter-spacing:.5px;margin-top:2px;text-align:center;white-space:nowrap}
+.roll-small{
+  padding:5px 10px;font-size:10px;font-weight:700;letter-spacing:1px;
+  background:transparent;border:1px solid var(--dim);border-radius:6px;
+  color:var(--muted);cursor:pointer;flex-shrink:0;
+  transition:all .18s;font-family:'Cinzel',serif;
+}
+.roll-small:hover{border-color:var(--green);color:var(--emerald)}
+
+/* Summary */
+.summary-box{
+  background:var(--bg2);border:1px solid var(--dim);border-radius:14px;
+  padding:24px;margin-top:8px;
+  animation:fadeUp .7s ease both;
+  position:relative;overflow:hidden;
+}
+.summary-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,var(--green3)22,transparent 70%);pointer-events:none}
+.summary-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--emerald);text-transform:uppercase;text-align:center;margin-bottom:16px}
+.summary-narration{
+  background:var(--bg3);border:1px solid var(--green3);border-radius:8px;
+  padding:14px 16px;font-size:13px;line-height:2;
+  color:var(--text);margin-bottom:14px;min-height:56px;
+  font-style:italic;font-family:'Cormorant Garamond',serif;font-size:16px;
+}
+.summary-narration.loading{color:var(--muted);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.summary-textarea{
+  width:100%;height:200px;padding:12px;font-size:12px;
+  background:var(--bg3);border:1px solid var(--dim);border-radius:8px;
+  color:var(--text);resize:vertical;line-height:1.9;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.copy-btn{
+  width:100%;margin-top:12px;padding:13px;
+  font-size:13px;font-weight:700;letter-spacing:1px;
+  background:transparent;border:1px solid var(--green);border-radius:10px;
+  color:var(--emerald);cursor:pointer;
+  font-family:'Cinzel',serif;text-transform:uppercase;
+  transition:all .22s;
+}
+.copy-btn:hover{background:var(--green3);box-shadow:0 0 20px var(--green)44}
+
+/* Special gacha overlay */
+#gacha-overlay{
+  position:fixed;inset:0;z-index:100;
+  display:none;align-items:center;justify-content:center;
+  background:#00000099;backdrop-filter:blur(6px);
+}
+#gacha-overlay.open{display:flex}
+.gacha-card{
+  background:var(--bg2);border:1px solid var(--gold);border-radius:20px;
+  padding:36px 32px;max-width:380px;width:90%;text-align:center;
+  position:relative;overflow:hidden;
+  animation:gachaIn .5s cubic-bezier(.16,1,.3,1);
+}
+@keyframes gachaIn{from{opacity:0;transform:scale(.8) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.gacha-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,#c9a96e18,transparent);pointer-events:none}
+.gacha-stars{font-size:28px;letter-spacing:4px;margin-bottom:16px;animation:starPulse 1s ease infinite alternate}
+@keyframes starPulse{from{text-shadow:0 0 10px #c9a96e}to{text-shadow:0 0 30px #c9a96e,0 0 60px #c9a96e88}}
+.gacha-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.gacha-result{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--light);line-height:1.5;margin-bottom:20px}
+.gacha-close{
+  padding:10px 28px;font-size:12px;font-weight:700;letter-spacing:2px;
+  background:transparent;border:1px solid var(--gold);border-radius:8px;
+  color:var(--gold);cursor:pointer;font-family:'Cinzel',serif;transition:all .2s;
+}
+.gacha-close:hover{background:#c9a96e22}
+
+/* Particles */
+.particle{position:fixed;pointer-events:none;z-index:99;border-radius:50%;animation:particleFly 1.2s ease-out forwards}
+@keyframes particleFly{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}
+}
+
+/* No-result gacha */
+.gacha-fail{
+  background:var(--bg2);border:1px solid var(--dim);border-radius:16px;
+  padding:24px;max-width:300px;width:90%;text-align:center;
+  animation:gachaIn .4s ease;
+}
+.gacha-fail p{font-size:13px;color:var(--muted);line-height:1.8;margin:10px 0 16px}
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div class="v-line"></div>
+
+<!-- Gacha overlay -->
+<div id="gacha-overlay" onclick="closeGacha(event)">
+  <div id="gacha-box"></div>
+</div>
+
+<div class="page">
+  <header>
+    <a class="back-link" href="index.html">← Arluna AI Atelier</a>
+    <div class="header-eyebrow">Character Builder</div>
+    <h1>身体設定ツール</h1>
+    <p class="header-sub">肉体の記憶、感覚の輪郭、素質の萌芽——<br>キャラクターの身体を、ダイスが語る</p>
+  </header>
+
+  <div class="divider"><span>Actions</span></div>
+  <div class="action-row" style="grid-template-columns:1fr">
+    <button class="btn-main" onclick="rollAll()">🎲 全てまとめて決定</button>
+  </div>
+
+  <div class="divider"><span>Result</span></div>
+  <div class="summary-box">
+    <div class="summary-title">Character Reading</div>
+    <div id="narration" class="summary-narration">——</div>
+    <textarea id="summary-text" class="summary-textarea" readonly></textarea>
+    <button class="copy-btn" onclick="copySummary()">Copy to Clipboard</button>
+  </div>
+
+  <div class="divider"><span>Basic Attributes</span></div>
+  <div class="attr-grid">
+    <div class="attr-box">
+      <span class="attr-label">Dominant Hand</span>
+      <select id="res-hand" class="attr-select" onchange="generateSummary()">
+        <option value="右利き">右利き</option>
+        <option value="左利き">左利き</option>
+        <option value="両利き">両利き</option>
+      </select>
+    </div>
+    <div class="attr-box">
+      <span class="attr-label">Blood Type</span>
+      <select id="res-blood" class="attr-select" onchange="generateSummary()">
+        <option value="A型">A型</option>
+        <option value="B型">B型</option>
+        <option value="O型">O型</option>
+        <option value="AB型">AB型</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="sections-area"></div>
+
+  <div class="divider"><span>✨ Special Gacha</span></div>
+  <div class="special-box">
+    <span class="special-box-label">特殊素質（共感覚・第六感）— おまけガチャ</span>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.8">確率5%の激レア素質。「全てまとめて決定」には含まれません。<br>遊び心で試してみてください。</p>
+    <button class="btn-special" onclick="rollSpecial()" style="width:100%;margin-bottom:14px">✨ 特殊素質ガチャを引く（確率5%）</button>
+    <select id="special-select" class="special-select" onchange="generateSummary()">
+      <option value="none">なし：一般的な感覚の持ち主</option>
+      <option value="color">★ 共感覚（色字）：文字や数字に決まった色を感じる</option>
+      <option value="vision">★ 共感覚（音視）：音を聴くと映像（色や形）が見える</option>
+      <option value="taste">★ 共感覚（音味）：音を聴くと口の中に味を感じる</option>
+      <option value="touch">★ 共感覚（接触）：他人の触感に同調する</option>
+      <option value="scent_color">★ 共感覚（匂い色）：匂いを嗅ぐと色が見える</option>
+      <option value="sound_shape">★ 共感覚（音形）：音を聴くと立体的な形や色を感じる</option>
+      <option value="taste_shape">★ 共感覚（味形）：食べ物の味を立体的な形として感じる</option>
+      <option value="time_space">★ 共感覚（時空間）：時間や月日が、自分の周りの空間に「場所」として見える</option>
+      <option value="danger">★ 第六感（危険察知）：視線や殺気に敏感</option>
+      <option value="intuition">★ 第六感（直感）：根拠はないが正解を引く力</option>
+      <option value="omen">★ 第六感（予兆）：嫌な予感が体調に現れる</option>
+      <option value="spirit">★ 第六感（霊感）：場所の残り香などを感じる</option>
+      <option value="premonition">★ 第六感（虫の知らせ）：大切な人の危機がなんとなくわかる</option>
+    </select>
+  </div>
+</div>
+
+<script>
+const CONFIG=[
+  {id:"desire",  title:"三大欲求",        label:"Desires",  delay:.65, items:[
+    {id:"appetite",label:"食欲（食への執着）"},
+    {id:"sleep",   label:"睡眠欲（耐性・優先度）"},
+    {id:"libido",  label:"性欲（愛着対象への関心度）"}
+  ]},
+  {id:"senses",  title:"五感（鋭さ）",    label:"Senses",   delay:.70, items:[
+    {id:"visual",      label:"視覚（情報）"},
+    {id:"hearing",     label:"聴覚（暗闇対応）"},
+    {id:"smell",       label:"嗅覚（本能）"},
+    {id:"touch",       label:"触覚（危険察知）"},
+    {id:"taste_sense", label:"味覚（鋭さ）"}
+  ]},
+  {id:"taste",   title:"味覚の好み",      label:"Taste",    delay:.75, items:[
+    {id:"sweet",label:"甘味（エネルギー）"},
+    {id:"salt",  label:"塩味（ミネラル）"},
+    {id:"sour",  label:"酸味（代謝）"},
+    {id:"bitter",label:"苦味（薬）"},
+    {id:"umami", label:"旨味（満足）"},
+    {id:"spicy", label:"辛味（刺激）"}
+  ]},
+  {id:"modern",  title:"嗜好品・現代の欲求",label:"Modern", delay:.80, items:[
+    {id:"alcohol",  label:"飲酒（不安・アルコール）"},
+    {id:"smoking",  label:"喫煙（集中・ニコチン）"},
+    {id:"digital",  label:"デジタル依存（孤独・快楽）"}
+  ]}
+];
+
+// 数値→言葉変換
+function toWord(v){
+  if(v<=10) return "皆無";
+  if(v<=25) return "極めて低";
+  if(v<=40) return "低め";
+  if(v<=55) return "平均";
+  if(v<=70) return "やや高";
+  if(v<=85) return "高め";
+  if(v<=95) return "非常に高";
+  return "極限";
+}
+
+// スライダー描画
+function buildSections(){
+  const area=document.getElementById('sections-area');
+  CONFIG.forEach(sec=>{
+    const block=document.createElement('div');
+    block.className='section-block';
+    block.style.animationDelay=sec.delay+'s';
+    let html=`<div class="divider" style="margin-top:28px"><span>${sec.label}</span></div>`;
+    sec.items.forEach(item=>{
+      html+=`<div class="item-row">
+        <div class="item-label">${item.label}</div>
+        <input type="range" class="item-slider" id="sld-${item.id}" min="1" max="100" value="50"
+          oninput="updateVal('${item.id}')">
+        <div class="item-val-wrap">
+          <div class="item-value" id="val-${item.id}">50</div>
+          <div class="item-word" id="word-${item.id}">平均</div>
+        </div>
+        <button class="roll-small" onclick="rollOne('${item.id}')">再振</button>
+      </div>`;
+    });
+    block.innerHTML=html;
+    area.appendChild(block);
+    // スライダーの色を初期化
+    sec.items.forEach(item=>updateSliderBg(item.id,50));
+  });
+}
+
+function updateSliderBg(id,val){
+  const sld=document.getElementById('sld-'+id);
+  if(sld) sld.style.setProperty('--pct',val+'%');
+}
+
+function updateVal(id){
+  const val=+document.getElementById('sld-'+id).value;
+  document.getElementById('val-'+id).textContent=val;
+  document.getElementById('word-'+id).textContent=toWord(val);
+  updateSliderBg(id,val);
+  generateSummary();
+}
+
+function rollOne(id){
+  const val=Math.floor(Math.random()*100)+1;
+  document.getElementById('sld-'+id).value=val;
+  updateVal(id);
+}
+
+function rollAttrs(){
+  const h=Math.floor(Math.random()*100)+1;
+  const hand=document.getElementById('res-hand');
+  hand.value=h===1||h===100?"両利き":h>=46&&h<=54?"左利き":"右利き";
+  const b=Math.floor(Math.random()*100)+1;
+  const blood=document.getElementById('res-blood');
+  blood.value=(b<=5||b>=97)?"AB型":b>=32&&b<=69?"A型":b>=17&&b<=31||b>=70&&b<=85?"O型":"B型";
+}
+
+function rollAll(){
+  CONFIG.forEach(s=>s.items.forEach(item=>rollOne(item.id)));
+  rollAttrs();
+  generateSummary();
+}
+
+// ── 特殊素質ガチャ ──
+function rollSpecial(){
+  const dice=Math.floor(Math.random()*100)+1;
+  const sel=document.getElementById('special-select');
+  if(dice>5){
+    sel.value="none";
+    showGachaFail();
+  } else {
+    const idx=Math.floor(Math.random()*(sel.options.length-1))+1;
+    sel.selectedIndex=idx;
+    const result=sel.options[idx].text;
+    showGachaSuccess(result);
+  }
+  generateSummary();
+}
+
+function showGachaSuccess(result){
+  const box=document.getElementById('gacha-box');
+  box.innerHTML=`
+    <div class="gacha-card">
+      <div class="gacha-stars">✦ ✦ ✦</div>
+      <div class="gacha-label">Special Quality Unlocked</div>
+      <div class="gacha-result">${result.replace('★ ','')}</div>
+      <button class="gacha-close" onclick="closeGacha()">Close</button>
+    </div>`;
+  document.getElementById('gacha-overlay').classList.add('open');
+  spawnParticles();
+}
+
+function showGachaFail(){
+  const box=document.getElementById('gacha-box');
+  box.innerHTML=`
+    <div class="gacha-fail">
+      <div style="font-size:28px;margin-bottom:8px">🌿</div>
+      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">RESULT</div>
+      <p>特殊素質は見られなかった——<br>それもまた、ひとつの在り方。</p>
+      <button class="gacha-close" onclick="closeGacha()">Close</button>
+    </div>`;
+  document.getElementById('gacha-overlay').classList.add('open');
+}
+
+function closeGacha(e){
+  if(e&&e.target!==document.getElementById('gacha-overlay'))return;
+  document.getElementById('gacha-overlay').classList.remove('open');
+}
+
+function spawnParticles(){
+  const colors=['#50c878','#c9a96e','#e8d5a3','#3fa068','#f0faf4'];
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=Math.random()*6+3;
+    const tx=(Math.random()-0.5)*300;
+    const ty=(Math.random()-0.5)*300;
+    p.style.cssText=`
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${50+Math.random()*10}%;top:${40+Math.random()*20}%;
+      --tx:${tx}px;--ty:${ty}px;
+      animation-delay:${Math.random()*.3}s;
+      animation-duration:${.8+Math.random()*.6}s;
+    `;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1500);
+  }
+}
+
+// ── サマリー生成 ──
+function generateSummary(){
+  // テキストまとめ
+  let txt="【基本情報】\n";
+  txt+="利き腕: "+document.getElementById('res-hand').value+"\n";
+  txt+="血液型: "+document.getElementById('res-blood').value+"\n";
+  const sp=document.getElementById('special-select');
+  txt+="特殊素質: "+sp.options[sp.selectedIndex].text+"\n\n";
+  CONFIG.forEach(s=>{
+    txt+="【"+s.title+"】\n";
+    s.items.forEach(item=>{
+      const v=document.getElementById('val-'+item.id)?.textContent||"50";
+      const w=toWord(+v);
+      txt+=item.label+": "+v+" （"+w+"）\n";
+    });
+    txt+="\n";
+  });
+  document.getElementById('summary-text').value=txt.trim();
+
+  // ナレーション生成
+  buildNarration();
+}
+
+function buildNarration(){
+  const hand=document.getElementById('res-hand').value;
+  const blood=document.getElementById('res-blood').value;
+  const sp=document.getElementById('special-select');
+  const spVal=sp.value;
+  const spText=spVal==="none"?"":sp.options[sp.selectedIndex].text.replace("★ ","");
+
+  const appetite=+document.getElementById('val-appetite')?.textContent||50;
+  const sleep=   +document.getElementById('val-sleep')?.textContent||50;
+  const visual=  +document.getElementById('val-visual')?.textContent||50;
+  const hearing= +document.getElementById('val-hearing')?.textContent||50;
+  const smell=   +document.getElementById('val-smell')?.textContent||50;
+  const alcohol= +document.getElementById('val-alcohol')?.textContent||50;
+  const digital= +document.getElementById('val-digital')?.textContent||50;
+
+  let lines=[];
+
+  // 利き腕
+  if(hand==="両利き") lines.push("両手を等しく使いこなすという、稀有な身体的素養を持つ。");
+  else if(hand==="左利き") lines.push("左を主として生きる——右利きの世界に馴染みながらも、どこか独自の角度で物事を捉えやすい気質がある。");
+
+  // 五感
+  if(visual>=75) lines.push("目は鋭く、空間や細部に敏感に反応する。");
+  if(hearing>=75) lines.push("わずかな音の変化を捉える聴覚は、暗がりでも心強い羅針盤となる。");
+  if(smell>=75) lines.push("嗅覚が本能に直結しており、場の空気を鼻で読む力がある。");
+
+  // 欲求
+  if(appetite>=75) lines.push("食への執着は強く、腹が空けば判断力にも影が差す。");
+  else if(appetite<=25) lines.push("食欲は淡泊で、食事を単なる燃料として捉える傾向がある。");
+  if(sleep<=30) lines.push("睡眠への依存は低く、不眠に強い体質を持つ。");
+
+  // 嗜好
+  if(alcohol>=70&&digital>=70) lines.push("酒とデジタルの両方に逃げ場を求める——孤独と刺激の間で揺れる魂の持ち主かもしれない。");
+  else if(alcohol>=70) lines.push("アルコールに安らぎを見出す傾向があり、不安を内側に抱えやすい。");
+  else if(digital>=70) lines.push("デジタルへの没入が深く、現実との境界線が時に曖昧になる。");
+
+  // 特殊素質
+  if(spVal!=="none") lines.push("そしてこの者には、"+spText.split("：")[0]+"という異質な感覚が宿っている。");
+
+  if(lines.length===0) lines.push("これといった突出した特徴を持たない、平均的な感覚の持ち主——だが、それは「普通」の強さでもある。");
+
+  document.getElementById('narration').textContent=lines.join("　");
+}
+
+function copySummary(){
+  const ta=document.getElementById('summary-text');
+  ta.select();
+  navigator.clipboard?.writeText(ta.value).catch(()=>{document.execCommand('copy')});
+  const btn=document.querySelector('.copy-btn');
+  btn.textContent='Copied ✓';
+  btn.style.color='var(--emerald)';
+  btn.style.borderColor='var(--emerald)';
+  setTimeout(()=>{btn.textContent='Copy to Clipboard';btn.style.color='';btn.style.borderColor='';},2000);
+}
+
+buildSections();
+generateSummary();
+</script>
+</body>
+</html>

@@ -5,339 +5,193 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arluna AI Atelier</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Noto+Sans+JP:wght@300;400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Noto+Sans+JP:wght@300;400;700&family=Bebas+Neue&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:     #0c0809;
-  --bg2:    #120d0e;
-  --bg3:    #1c1314;
-  --red:    #9F2E42;
-  --red2:   #c43d55;
-  --red3:   #6b1e2d;
-  --gold:   #c9a96e;
-  --gold2:  #e8d5a3;
-  --dim:    #2e1e22;
-  --muted:  #6e5058;
-  --text:   #ece4e6;
-  --light:  #f8f0f2;
+  --bg:#0c0809;--bg2:#120d0e;--bg3:#1c1314;
+  --red:#9F2E42;--red2:#c43d55;--red3:#6b1e2d;
+  --gold:#c9a96e;--gold2:#e8d5a3;
+  --dim:#2e1e22;--muted:#6e5058;
+  --text:#ece4e6;--light:#f8f0f2;
+  --blue:#3a7acc;--blue2:#5a9ae8;--blue3:#1e3a5f;
+  --green:#2d7a4f;--green2:#50c878;--green3:#1a4d30;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Noto Sans JP',sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;overflow-x:hidden}
 
-/* ── Noise ── */
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity:.035;
-  pointer-events:none;
-  z-index:0;
-}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.03;pointer-events:none;z-index:0}
 
-/* ── Ambient blobs ── */
-.blob{
-  position:fixed;border-radius:50%;
-  filter:blur(130px);opacity:.15;
-  pointer-events:none;z-index:0;
-  animation:blobDrift 20s ease-in-out infinite alternate;
-}
+.blob{position:fixed;border-radius:50%;filter:blur(130px);opacity:.15;pointer-events:none;z-index:0;animation:blobDrift 20s ease-in-out infinite alternate}
 .blob1{width:700px;height:500px;background:#9F2E42;top:-180px;left:-200px;animation-duration:22s}
 .blob2{width:350px;height:350px;background:#5a1020;bottom:-80px;right:-80px;animation-duration:28s;animation-delay:-10s}
 .blob3{width:250px;height:250px;background:#c9a96e;top:45%;left:55%;opacity:.06;animation-duration:16s;animation-delay:-5s}
-@keyframes blobDrift{
-  from{transform:translate(0,0) scale(1)}
-  to  {transform:translate(35px,25px) scale(1.06)}
-}
+@keyframes blobDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(35px,25px) scale(1.06)}}
 
-/* ── Decorative vertical line ── */
-.v-line{
-  position:fixed;left:40px;top:0;bottom:0;
-  width:1px;
-  background:linear-gradient(to bottom,transparent 0%,var(--red3) 30%,var(--red3) 70%,transparent 100%);
-  opacity:.35;z-index:0;
-}
+.v-line{position:fixed;left:40px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--red3) 30%,var(--red3) 70%,transparent);opacity:.35;z-index:0}
 @media(max-width:600px){.v-line{display:none}}
 
-/* ── Page wrapper ── */
-.page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 100px}
+.page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px 100px}
 
 /* ── Header ── */
-header{padding:72px 0 52px;text-align:center;position:relative}
-
+header{padding:72px 0 52px;text-align:center}
 .aaa-logo{display:inline-block;position:relative;margin-bottom:22px}
-
-.aaa-letters{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(80px,15vw,140px);
-  line-height:.9;
-  letter-spacing:-2px;
-  display:flex;
-  justify-content:center;
-  position:relative;
-}
-.aaa-letters::before{
-  content:'AAA';
-  position:absolute;
-  top:6px;left:4px;
-  color:var(--red3);
-  opacity:.5;
-  letter-spacing:-2px;
-  z-index:0;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(80px,15vw,140px);
-  line-height:.9;
-}
-.aaa-letters span{
-  position:relative;z-index:1;
-  display:inline-block;
-  background:linear-gradient(160deg,var(--light) 0%,var(--red2) 55%,var(--red) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  animation:letterIn .9s cubic-bezier(.16,1,.3,1) both;
-}
+.aaa-letters{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,15vw,140px);line-height:.9;letter-spacing:-2px;display:flex;justify-content:center;position:relative}
+.aaa-letters::before{content:'AAA';position:absolute;top:6px;left:4px;color:var(--red3);opacity:.5;letter-spacing:-2px;z-index:0;font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,15vw,140px);line-height:.9}
+.aaa-letters span{position:relative;z-index:1;display:inline-block;background:linear-gradient(160deg,var(--light) 0%,var(--red2) 55%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:letterIn .9s cubic-bezier(.16,1,.3,1) both}
 .aaa-letters span:nth-child(1){animation-delay:.06s}
 .aaa-letters span:nth-child(2){animation-delay:.18s;margin:0 4px}
 .aaa-letters span:nth-child(3){animation-delay:.30s}
-@keyframes letterIn{
-  from{opacity:0;transform:translateY(28px) skewX(-10deg)}
-  to  {opacity:1;transform:translateY(0) skewX(0)}
-}
-
-.aaa-underline{
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);
-  margin:10px auto 14px;
-  width:0;
-  animation:lineExpand 1s .55s cubic-bezier(.16,1,.3,1) forwards;
-}
+@keyframes letterIn{from{opacity:0;transform:translateY(28px) skewX(-10deg)}to{opacity:1;transform:translateY(0) skewX(0)}}
+.aaa-underline{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);margin:10px auto 14px;width:0;animation:lineExpand 1s .55s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes lineExpand{to{width:90%}}
+.aaa-full{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,2.2vw,17px);font-weight:300;letter-spacing:6px;color:var(--gold);opacity:0;animation:fadeUp .7s .75s ease forwards}
+.header-sub{font-size:12px;color:var(--muted);letter-spacing:.5px;margin-top:12px;line-height:2;opacity:0;animation:fadeUp .7s .95s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-.aaa-full{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(12px,2.2vw,17px);
-  font-weight:300;
-  letter-spacing:6px;
-  color:var(--gold);
-  opacity:0;
-  animation:fadeUp .7s .75s ease forwards;
-}
-.header-sub{
-  font-size:12px;
-  color:var(--muted);
-  letter-spacing:.5px;
-  margin-top:12px;
-  line-height:2;
-  opacity:0;
-  animation:fadeUp .7s .95s ease forwards;
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(10px)}
-  to  {opacity:1;transform:translateY(0)}
-}
+/* ── Category section ── */
+.cat-section{margin-bottom:52px;opacity:0;animation:fadeUp .7s ease forwards}
+.cat-section:nth-child(1){animation-delay:1.1s}
+.cat-section:nth-child(2){animation-delay:1.25s}
 
-/* ── Section label ── */
-.section-label{
-  display:flex;align-items:center;gap:14px;
-  margin:52px 0 24px;
-  opacity:0;
-  animation:fadeUp .6s 1.1s ease forwards;
-}
-.section-label::before{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--dim))}
-.section-label::after {content:'';flex:1;height:1px;background:linear-gradient(270deg,transparent,var(--dim))}
-.section-label span{
-  font-family:'Cormorant Garamond',serif;
-  font-size:10px;letter-spacing:4px;
-  color:var(--muted);text-transform:uppercase;white-space:nowrap;
-}
+.cat-header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.cat-header::after{content:'';flex:1;height:1px}
+.cat-header.blue::after{background:linear-gradient(90deg,var(--blue3),transparent)}
+.cat-header.green::after{background:linear-gradient(90deg,var(--green3),transparent)}
+.cat-title-wrap{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.cat-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase}
+.cat-header.blue .cat-eyebrow{color:var(--blue)}
+.cat-header.green .cat-eyebrow{color:var(--green2)}
+.cat-name{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,3.5vw,28px);font-weight:600;line-height:1}
+.cat-header.blue .cat-name{color:var(--blue2)}
+.cat-header.green .cat-name{color:var(--green2)}
 
-/* ── Cards ── */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:14px;
-}
+/* ── Cards grid ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 
-.card{
-  position:relative;
-  border:1px solid var(--dim);
-  border-radius:14px;
-  padding:26px 22px;
-  background:var(--bg2);
-  text-decoration:none;
-  color:inherit;
-  overflow:hidden;
-  display:flex;flex-direction:column;gap:11px;
-  transition:transform .28s cubic-bezier(.16,1,.3,1),border-color .25s,box-shadow .25s;
-  opacity:0;
-  animation:cardIn .75s ease forwards;
-}
-.card::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 90% 55% at 50% 0%,var(--card-glow,#9F2E4215),transparent 70%);
-  pointer-events:none;
-}
-.card::after{
-  content:'';
-  position:absolute;top:0;left:0;right:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--card-line,var(--red3)),transparent);
-  opacity:.7;
-}
-.card:hover{
-  transform:translateY(-7px);
-  border-color:var(--red);
-  box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px #9F2E4233;
-}
-@keyframes cardIn{
-  from{opacity:0;transform:translateY(22px)}
-  to  {opacity:1;transform:translateY(0)}
-}
-.card:nth-child(1){animation-delay:1.2s;--card-glow:#9F2E4218;--card-line:#9F2E42}
-.card:nth-child(2){animation-delay:1.35s;--card-glow:#c9a96e10;--card-line:#c9a96e55}
-.card:nth-child(3){animation-delay:1.5s;--card-glow:#9F2E4212;--card-line:#9F2E4244}
+.card{position:relative;border:1px solid var(--dim);border-radius:14px;padding:22px 20px;background:var(--bg2);text-decoration:none;color:inherit;overflow:hidden;display:flex;flex-direction:column;gap:10px;transition:transform .28s cubic-bezier(.16,1,.3,1),border-color .25s,box-shadow .25s}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 55% at 50% 0%,var(--card-glow,transparent),transparent 70%);pointer-events:none}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--card-line,transparent),transparent);opacity:.8}
+.card:hover{transform:translateY(-6px);border-color:var(--card-accent,var(--dim));box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px var(--card-accent,transparent)22}
 
-.card-icon{font-size:30px;line-height:1}
+/* 青系カード */
+.card.blue{--card-glow:#3a7acc15;--card-line:#3a7acc;--card-accent:#5a9ae8}
+.card.blue:hover{border-color:var(--blue2)}
 
-.card-tag{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  font-weight:700;padding:3px 10px;border-radius:20px;
-  width:fit-content;border:1px solid currentColor;
-}
+/* 緑系カード */
+.card.green{--card-glow:#2d7a4f15;--card-line:#2d7a4f;--card-accent:#50c878}
+.card.green:hover{border-color:var(--green2)}
 
-.card-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(19px,2.8vw,24px);
-  font-weight:600;line-height:1.25;
-  color:var(--light);
-}
-
-.card-desc{font-size:11.5px;color:var(--muted);line-height:1.85;flex:1}
-
-.card-arrow{
-  display:flex;align-items:center;gap:6px;
-  font-size:10px;font-weight:700;letter-spacing:2px;
-  color:var(--red2);margin-top:6px;
-  transition:gap .2s,color .2s;
-}
-.card:hover .card-arrow{gap:12px}
-.card-arrow::after{content:'→';font-size:13px}
+.card-icon{font-size:26px;line-height:1}
+.card-tag{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:3px 10px;border-radius:20px;width:fit-content;border:1px solid currentColor}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.5vw,21px);font-weight:600;line-height:1.25;color:var(--light)}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.85;flex:1}
+.card-arrow{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:2px;margin-top:4px;transition:gap .2s}
+.card:hover .card-arrow{gap:10px}
+.card-arrow::after{content:'→';font-size:12px}
+.card.blue .card-arrow{color:var(--blue2)}
+.card.green .card-arrow{color:var(--green2)}
 
 /* Coming soon */
-.card.soon{cursor:default;pointer-events:none}
+.card.soon{cursor:default;pointer-events:none;opacity:.45}
 .card.soon:hover{transform:none;border-color:var(--dim);box-shadow:none}
-.soon-badge{
-  position:absolute;top:14px;right:14px;
-  font-size:8px;letter-spacing:2px;color:var(--muted);
-  border:1px solid var(--dim);padding:3px 8px;
-  border-radius:20px;text-transform:uppercase;
-}
+.soon-badge{position:absolute;top:12px;right:12px;font-size:8px;letter-spacing:2px;color:var(--muted);border:1px solid var(--dim);padding:2px 8px;border-radius:20px;text-transform:uppercase;font-family:'Cinzel',serif}
 
-/* ── Ornament ── */
-.ornament{
-  text-align:center;margin:56px 0 0;
-  opacity:0;animation:fadeUp .6s 1.9s ease forwards;
-  color:var(--red3);font-size:11px;letter-spacing:8px;
-}
-
-/* ── Footer ── */
-footer{
-  margin-top:20px;padding-top:24px;
-  border-top:1px solid var(--dim);
-  text-align:center;font-size:11px;
-  color:var(--muted);line-height:2.4;
-  opacity:0;animation:fadeUp .6s 2s ease forwards;
-}
-footer .aaa-mini{
-  font-family:'Bebas Neue',sans-serif;
-  letter-spacing:4px;font-size:13px;
-  background:linear-gradient(90deg,var(--red),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-  display:block;margin-bottom:4px;
-}
+/* ── Ornament & Footer ── */
+.ornament{text-align:center;margin:56px 0 0;color:var(--red3);font-size:11px;letter-spacing:8px;opacity:0;animation:fadeUp .6s 1.9s ease forwards}
+footer{margin-top:20px;padding-top:24px;border-top:1px solid var(--dim);text-align:center;font-size:11px;color:var(--muted);line-height:2.4;opacity:0;animation:fadeUp .6s 2s ease forwards}
+footer .aaa-mini{font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:13px;background:linear-gradient(90deg,var(--red),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:4px}
 </style>
 </head>
 <body>
-
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 <div class="blob blob3"></div>
 <div class="v-line"></div>
 
 <div class="page">
-
   <header>
     <div class="aaa-logo">
-      <div class="aaa-letters">
-        <span>A</span><span>A</span><span>A</span>
-      </div>
+      <div class="aaa-letters"><span>A</span><span>A</span><span>A</span></div>
       <div class="aaa-underline"></div>
       <div class="aaa-full">Arluna &nbsp;AI &nbsp;Atelier</div>
     </div>
     <p class="header-sub">AIと一緒につくった、たのしいものたちの置き場所</p>
   </header>
 
-  <div class="section-label"><span>Works</span></div>
-
-  <div class="cards">
-
-    <!-- 都道府県ランキング：青系 -->
-    <a class="card" href="都道府県戦闘力ランキング.html" style="--card-glow:#2a5a9a18;--card-line:#3a7acc;border-color:#1e3a5f">
-      <div class="card-icon">🗾</div>
-      <div class="card-tag" style="color:#5a9ae8;border-color:#5a9ae844">Data / Ranking</div>
-      <div class="card-title">都道府県<br>戦闘力ランキング</div>
-      <div class="card-desc">
-        世界遺産・観光客数・食文化・キャラIP・自然景観・国際知名度の
-        6カテゴリから算出した47都道府県の「総合戦闘力」。
-        カテゴリ別の並び替えにも対応。
+  <!-- Nippon Playground -->
+  <div class="cat-section">
+    <div class="cat-header blue">
+      <div class="cat-title-wrap">
+        <span class="cat-eyebrow">Nippon Playground</span>
+        <span class="cat-name">🗾 日本であそぶ</span>
       </div>
-      <div class="card-arrow" style="color:#5a9ae8">VIEW</div>
-    </a>
-
-    <!-- TRPGツール：緑系 -->
-    <a class="card" href="身体設定ツール.html" style="--card-glow:#1a4d3018;--card-line:#2d7a4f;border-color:#1a3a22">
-      <div class="card-icon">🎲</div>
-      <div class="card-tag" style="color:#50c878;border-color:#50c87844">TRPG / Tool</div>
-      <div class="card-title">身体設定ツール<br><span style="font-size:14px;opacity:.6">Character Builder</span></div>
-      <div class="card-desc">
-        キャラクターの利き腕・血液型・五感・欲求・味覚の好みをダイスで決定。
-        特殊素質（共感覚・第六感）のガチャつき。
-      </div>
-      <div class="card-arrow" style="color:#50c878">VIEW</div>
-    </a>
-
-    <!-- カードゲーム：赤系・Coming Soon -->
-    <div class="card soon" style="--card-glow:#9F2E4212;--card-line:#9F2E4244;border-color:#2a1018">
-      <div class="soon-badge">Coming Soon</div>
-      <div class="card-icon" style="opacity:.35">🃏</div>
-      <div class="card-tag" style="color:#9F2E42;border-color:#9F2E4233;opacity:.5">Card Game</div>
-      <div class="card-title" style="opacity:.35">都道府県<br>カードバトル</div>
-      <div class="card-desc" style="opacity:.5">
-        47都道府県の観光力・文化・食・キャラIPを武器に戦う
-        デッキ構築カードゲーム。友達と相談中。
-      </div>
-      <div class="card-arrow" style="opacity:.25;color:#9F2E42">VIEW</div>
     </div>
+    <div class="cards">
+      <a class="card blue" href="都道府県戦闘力ランキング.html">
+        <div class="card-icon">🗾</div>
+        <div class="card-tag" style="color:var(--blue2);border-color:#5a9ae844">Data / Ranking</div>
+        <div class="card-title">都道府県<br>戦闘力ランキング</div>
+        <div class="card-desc">世界遺産・観光客数・食文化・キャラIP・自然景観・国際知名度の6カテゴリから算出した47都道府県の「総合戦闘力」。カテゴリ別の並び替えにも対応。</div>
+        <div class="card-arrow">VIEW</div>
+      </a>
+      <div class="card blue soon">
+        <div class="soon-badge">Coming Soon</div>
+        <div class="card-icon">🃏</div>
+        <div class="card-tag" style="color:var(--blue2);border-color:#5a9ae844">Card Game</div>
+        <div class="card-title">都道府県<br>カードバトル</div>
+        <div class="card-desc">47都道府県の観光力・文化・食・キャラIPを武器に戦うデッキ構築カードゲーム。友達と相談中。</div>
+        <div class="card-arrow">VIEW</div>
+      </div>
+    </div>
+  </div>
 
+  <!-- TRPG Tools -->
+  <div class="cat-section">
+    <div class="cat-header green">
+      <div class="cat-title-wrap">
+        <span class="cat-eyebrow">TRPG Tools</span>
+        <span class="cat-name">🎲 キャラクターをつくる</span>
+      </div>
+    </div>
+    <div class="cards">
+      <a class="card green" href="身体設定ツール.html">
+        <div class="card-icon">🎲</div>
+        <div class="card-tag" style="color:var(--green2);border-color:#50c87844">Body / Character</div>
+        <div class="card-title">身体設定ツール</div>
+        <div class="card-desc">利き腕・血液型・五感・欲求・味覚の好みをダイスで決定。特殊素質（共感覚・第六感）のガチャつき。</div>
+        <div class="card-arrow">VIEW</div>
+      </a>
+      <a class="card green" href="ビッグファイブツール.html">
+        <div class="card-icon">📊</div>
+        <div class="card-tag" style="color:var(--green2);border-color:#50c87844">Personality</div>
+        <div class="card-title">ビッグファイブ<br>性格設定ツール</div>
+        <div class="card-desc">心理学の「ビッグファイブ」理論をもとに5つの性格軸をダイスで決定。数値によって5段階の詳細説明が変化。</div>
+        <div class="card-arrow">VIEW</div>
+      </a>
+      <a class="card green" href="MBTIツール.html">
+        <div class="card-icon">🧠</div>
+        <div class="card-tag" style="color:var(--green2);border-color:#50c87844">MBTI / Cognitive</div>
+        <div class="card-title">MBTI<br>性格タイプツール</div>
+        <div class="card-desc">16タイプ＋A/Tをランダムまたは手動で選択。8つの認知機能をレーダーチャートで可視化。TRPG向けの解説つき。</div>
+        <div class="card-arrow">VIEW</div>
+      </a>
+      <a class="card green" href="五行ツール.html">
+        <div class="card-icon">☯️</div>
+        <div class="card-tag" style="color:var(--green2);border-color:#50c87844">Five Elements</div>
+        <div class="card-title">五行<br>オーラバランスツール</div>
+        <div class="card-desc">木・火・土・金・水の5つのエネルギーバランスをダイスで決定。五角形チャートでキャラクターの雰囲気を可視化。</div>
+        <div class="card-arrow">VIEW</div>
+      </a>
+    </div>
   </div>
 
   <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-
   <footer>
     <span class="aaa-mini">AAA</span>
     Arluna AI Atelier — AIと遊びながらつくったツール集<br>
     Powered by Claude / Anthropic
   </footer>
-
 </div>
 </body>
 </html>

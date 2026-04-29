@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>都道府県 戦闘力ランキング</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=Cormorant+Garamond:wght@300;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#07080f;--bg2:#0d0f1c;--bg3:#13152a;
@@ -20,13 +20,18 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP','Sora',sans-serif;min-height:100vh;overflow-x:hidden}
 
+
+/* Back link */
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:2px;color:#4a6a9a;text-decoration:none;padding:8px 16px 0;transition:color .2s;font-family:'Cinzel',serif}
+.back-link:hover{color:#5a9ae8}
+
 /* Hero */
 .hero{position:relative;text-align:center;padding:64px 20px 48px;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 0%,#1a1060 0%,transparent 70%)}
 .hero-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.06}
 .hero-bg span{position:absolute;font-size:80px;font-weight:900;color:#fff;animation:drift 20s linear infinite;font-family:'Noto Sans JP',sans-serif}
 @keyframes drift{0%{transform:translateY(120%) rotate(0deg)}100%{transform:translateY(-120%) rotate(15deg)}}
-.eyebrow{display:inline-block;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);border:1px solid #ff3c5c55;padding:4px 14px;border-radius:20px;margin-bottom:20px}
-h1{font-size:clamp(28px,5vw,54px);font-weight:900;line-height:1.1;margin-bottom:12px;background:linear-gradient(135deg,#fff 30%,#a09ae0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.eyebrow{display:inline-block;font-family:'Cinzel',serif;font-size:11px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:#5a9ae8;border:1px solid #5a9ae855;padding:4px 14px;border-radius:20px;margin-bottom:20px}
+h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:12px;font-family:"Cormorant Garamond",serif;background:linear-gradient(135deg,#fff 20%,#7ab0f0 60%,#4a7acc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:13px;color:var(--muted);max-width:480px;margin:0 auto 36px;line-height:1.8}
 .stats-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:0}
 .stat-pill{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center}
@@ -110,8 +115,10 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:900;line-height:1.1;margin-bottom:
 </head>
 <body>
 
+<a class="back-link" href="index.html">← Arluna AI Atelier</a>
 <!-- Hero -->
 <div class="hero">
+  <div style="height:1px;background:linear-gradient(90deg,transparent,#9F2E42,#5a9ae8,#9F2E42,transparent);opacity:.5;margin-bottom:0"></div>
   <div class="hero-bg">
     <span style="left:5%;animation-delay:0s;animation-duration:25s">北</span>
     <span style="left:20%;animation-delay:4s;animation-duration:18s">東</span>
@@ -121,6 +128,7 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:900;line-height:1.1;margin-bottom:
     <span style="left:88%;animation-delay:6s;animation-duration:24s">沖</span>
   </div>
   <div class="eyebrow">Japan Prefecture Power Index</div>
+  <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#4a6a9a;margin-bottom:8px">Arluna AI Atelier</div>
   <h1>日本47都道府県<br>戦闘力ランキング</h1>
   <p class="hero-sub">世界遺産・観光客数・食文化・キャラクターIP・自然景観・国際知名度の<br>6カテゴリを重み付き合算して算出した「都道府県の総合戦闘力」</p>
   <div class="stats-row">
@@ -436,5 +444,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal({target:d
 
 applyFilter();
 </script>
+
+<!-- Footer -->
+<div style="text-align:center;padding:32px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:11px;line-height:2.2">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;background:linear-gradient(90deg,#9F2E42,#5a9ae8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;display:block;margin-bottom:6px">AAA — Arluna AI Atelier</a>
+  AIと遊びながらつくったツール集
+</div>
 </body>
 </html>

@@ -131,10 +131,10 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:
   <div class="eyebrow">Japan Prefecture Power Index</div>
   <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#4a6a9a;margin-bottom:8px">Arluna AI Atelier</div>
   <h1>日本47都道府県<br>戦闘力ランキング</h1>
-  <p class="hero-sub">世界遺産・観光客数・食文化・キャラクターIP・自然景観・国際知名度・GDP・著名人・方言の<br>9カテゴリを重み付き合算して算出した「都道府県の総合戦闘力」</p>
+  <p class="hero-sub">世界遺産・観光客数・食文化・キャラクターIP・自然景観・国際知名度・GDP・著名人の<br>8カテゴリを重み付き合算して算出した「都道府県の総合戦闘力」</p>
   <div class="stats-row">
     <div class="stat-pill"><div class="num">47</div><div class="lbl">都道府県</div></div>
-    <div class="stat-pill"><div class="num">9</div><div class="lbl">評価カテゴリ</div></div>
+    <div class="stat-pill"><div class="num">8</div><div class="lbl">評価カテゴリ</div></div>
     <div class="stat-pill"><div class="num" id="hero-top">—</div><div class="lbl">最強都道府県</div></div>
     <div class="stat-pill"><div class="num" id="hero-avg">—</div><div class="lbl">全国平均戦闘力</div></div>
   </div>
@@ -159,8 +159,6 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:
   <span class="cat-chip" style="background:#E8834A22;color:var(--cat6)"><span class="dot" style="background:var(--cat6)"></span>GDP×1.0</span>
   <span style="font-size:10px;color:var(--muted)">+</span>
   <span class="cat-chip" style="background:#C4A35A22;color:var(--cat7)"><span class="dot" style="background:var(--cat7)"></span>著名人×1.0</span>
-  <span style="font-size:10px;color:var(--muted)">+</span>
-  <span class="cat-chip" style="background:#5BBFBF22;color:var(--cat8)"><span class="dot" style="background:var(--cat8)"></span>方言×0.5</span>
   <span style="font-size:11px;color:var(--muted)">）× 11,000</span>
 </div>
 
@@ -205,7 +203,6 @@ const CATS=[
   {key:'intl',    label:'国際ブランド知名度',w:1.5,col:'#4090e0'},
   {key:'gdp',     label:'GDP・経済力',    w:1.0,col:'#E8834A'},
   {key:'celeb',   label:'著名人輩出数',   w:1.0,col:'#C4A35A'},
-  {key:'dialect', label:'方言難解度⚡',   w:0.5,col:'#5BBFBF'},
 ];
 
 const DATA=[
@@ -418,6 +415,33 @@ function renderList(list){
   }).join('');
 }
 
+function dialectStars(d){
+  const s=d.dialect;
+  const n=s>=80?5:s>=60?4:s>=40?3:s>=20?2:1;
+  const filled='★'.repeat(n);
+  const empty='☆'.repeat(5-n);
+  const NOTES={
+    '沖縄':'琉球語は日本語とは別の言語体系。本島北部の方言は特に難解で、本土出身者にはほぼ聞き取れない',
+    '鹿児島':'薩摩弁は江戸時代に他藩のスパイに解読されないよう意図的に難解化したとも言われる',
+    '青森':'津軽弁の他県民聴き取り正答率は全国最低クラス。同じ青森県内でも南部弁とは別言語に近い',
+    '秋田':'独特の鼻濁音と語彙で、東北弁の中でも聞き取りが難しい部類',
+    '岩手':'南部弁・気仙弁など地域差が大きく、語彙の独自性が高い',
+    '山形':'山形弁は語尾や音便が独特で、特に庄内地方は難解度が高い',
+    '富山':'語尾に「〜け」「〜ちゃ」が多く、独特のイントネーションが特徴',
+    '島根':'出雲弁は古語の影響が色濃く残り、語彙の独自性が高い',
+  };
+  const DEFAULT=n===5?'他県民にはほぼ解読不能レベル':
+                n===4?'独特のイントネーション・語彙で聴き取り困難':
+                n===3?'方言色は強いが慣れれば聴き取れる':
+                n===2?'標準語に近く、だいたい通じる':'テレビ・都市圏の影響でほぼ標準語';
+  const note=NOTES[d.n]||DEFAULT;
+  return `<div style="margin-top:10px;padding:10px 14px;background:var(--bg3);border-radius:10px;border-left:3px solid #5BBFBF55">
+    <div style="font-size:10px;color:#5BBFBF;font-weight:700;letter-spacing:.5px;margin-bottom:5px">方言難解度</div>
+    <div style="font-size:18px;letter-spacing:3px;color:#5BBFBF;margin-bottom:5px">${filled}<span style="opacity:.25">${empty}</span></div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">${note}</div>
+  </div>`;
+}
+
 function openModal(name){
   const d=DATA.find(x=>x.n===name);
   const allSorted=[...DATA].sort((a,b)=>b.power-a.power);
@@ -441,7 +465,8 @@ function openModal(name){
       <div class="modal-rank">全国 ${rank}位 / 47都道府県　全国平均比 ${Math.round(d.power/avg*100)}%</div>
     </div>
     <div class="cats-section">${catRows}</div>
-    <div class="memo-box"><strong>📋 戦闘力の源泉：</strong><br>${d.memo}</div>`;
+    <div class="memo-box"><strong>📋 戦闘力の源泉：</strong><br>${d.memo}</div>
+    ${dialectStars(d)}`;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }

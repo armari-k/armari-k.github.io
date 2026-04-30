@@ -15,6 +15,7 @@
   --c4:#D4537E;--c5:#94918a;--c6:#97C459;--c7:#F0997B;
   --cat0:#8075e5;--cat1:#1DB87A;--cat2:#F0A030;
   --cat3:#e05585;--cat4:#5a9e20;--cat5:#4090e0;
+  --cat6:#E8834A;--cat7:#C4A35A;--cat8:#5BBFBF;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -130,10 +131,10 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:
   <div class="eyebrow">Japan Prefecture Power Index</div>
   <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#4a6a9a;margin-bottom:8px">Arluna AI Atelier</div>
   <h1>日本47都道府県<br>戦闘力ランキング</h1>
-  <p class="hero-sub">世界遺産・観光客数・食文化・キャラクターIP・自然景観・国際知名度の<br>6カテゴリを重み付き合算して算出した「都道府県の総合戦闘力」</p>
+  <p class="hero-sub">世界遺産・観光客数・食文化・キャラクターIP・自然景観・国際知名度・GDP・著名人・方言の<br>9カテゴリを重み付き合算して算出した「都道府県の総合戦闘力」</p>
   <div class="stats-row">
     <div class="stat-pill"><div class="num">47</div><div class="lbl">都道府県</div></div>
-    <div class="stat-pill"><div class="num">6</div><div class="lbl">評価カテゴリ</div></div>
+    <div class="stat-pill"><div class="num">9</div><div class="lbl">評価カテゴリ</div></div>
     <div class="stat-pill"><div class="num" id="hero-top">—</div><div class="lbl">最強都道府県</div></div>
     <div class="stat-pill"><div class="num" id="hero-avg">—</div><div class="lbl">全国平均戦闘力</div></div>
   </div>
@@ -154,7 +155,13 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:
   <span class="cat-chip" style="background:#5a9e2022;color:var(--cat4)"><span class="dot" style="background:var(--cat4)"></span>自然×1.0</span>
   <span style="font-size:10px;color:var(--muted)">+</span>
   <span class="cat-chip" style="background:#4090e022;color:var(--cat5)"><span class="dot" style="background:var(--cat5)"></span>国際知名度×1.5</span>
-  <span style="font-size:11px;color:var(--muted)">）× 15,000</span>
+  <span style="font-size:10px;color:var(--muted)">+</span>
+  <span class="cat-chip" style="background:#E8834A22;color:var(--cat6)"><span class="dot" style="background:var(--cat6)"></span>GDP×1.0</span>
+  <span style="font-size:10px;color:var(--muted)">+</span>
+  <span class="cat-chip" style="background:#C4A35A22;color:var(--cat7)"><span class="dot" style="background:var(--cat7)"></span>著名人×1.0</span>
+  <span style="font-size:10px;color:var(--muted)">+</span>
+  <span class="cat-chip" style="background:#5BBFBF22;color:var(--cat8)"><span class="dot" style="background:var(--cat8)"></span>方言×0.5</span>
+  <span style="font-size:11px;color:var(--muted)">）× 11,000</span>
 </div>
 
 <!-- Controls -->
@@ -182,7 +189,7 @@ h1{font-size:clamp(28px,5vw,54px);font-weight:600;line-height:1.1;margin-bottom:
 <!-- Footer -->
 <div class="footer">
   各スコアは観光データ・UNESCO世界遺産登録数・国宝件数・<br>
-  国内外観光客統計・ブランド調査等を参考に推計した独自指標です<br><br>
+  国内外観光客統計・県内総生産・著名人データ・方言研究等を参考に推計した独自指標です（9カテゴリ）<br><br>
   © 都道府県戦闘力ランキング
 </div>
 
@@ -196,106 +203,109 @@ const CATS=[
   {key:'charaIP', label:'キャラ・アニメIP', w:0.8,col:'#e05585'},
   {key:'nature',  label:'自然景観・地理',  w:1.0,col:'#5a9e20'},
   {key:'intl',    label:'国際ブランド知名度',w:1.5,col:'#4090e0'},
+  {key:'gdp',     label:'GDP・経済力',    w:1.0,col:'#E8834A'},
+  {key:'celeb',   label:'著名人輩出数',   w:1.0,col:'#C4A35A'},
+  {key:'dialect', label:'方言難解度⚡',   w:0.5,col:'#5BBFBF'},
 ];
 
 const DATA=[
-  {n:"北海道",r:0,heritage:55,visitor:75,food:85,charaIP:45,nature:95,intl:65,
+  {n:"北海道",r:0,heritage:55,visitor:75,food:85,charaIP:45,nature:95,intl:65,gdp:36,celeb:28,dialect:20,
    memo:"知床・縄文遺跡群UNESCO。広大な自然（自然95点）・ラベンダー・海産物・ジンギスカン。インバウンドに人気の北の大地"},
-  {n:"青森",r:1,heritage:45,visitor:38,food:62,charaIP:35,nature:52,intl:28,
+  {n:"青森",r:1,heritage:45,visitor:38,food:62,charaIP:35,nature:52,intl:28,gdp:10,celeb:22,dialect:82,
    memo:"白神山地・縄文遺跡群UNESCO。ねぶた祭・リンゴ生産量全国1位・ホタテ。三内丸山遺跡など先史文化も充実"},
-  {n:"岩手",r:1,heritage:60,visitor:33,food:48,charaIP:30,nature:50,intl:25,
+  {n:"岩手",r:1,heritage:60,visitor:33,food:48,charaIP:30,nature:50,intl:25,gdp:10,celeb:38,dialect:68,
    memo:"平泉（中尊寺金色堂）UNESCO・縄文遺跡群UNESCO。文化財スコア60点は東北最高水準。わんこそば・前沢牛"},
-  {n:"宮城",r:1,heritage:25,visitor:48,food:70,charaIP:28,nature:42,intl:33,
+  {n:"宮城",r:1,heritage:25,visitor:48,food:70,charaIP:28,nature:42,intl:33,gdp:22,celeb:35,dialect:42,
    memo:"松島（日本三景）・仙台七夕まつり。UNESCO遺産はないが食文化が強い。牛タン・ずんだもち・笹かまぼこ"},
-  {n:"秋田",r:1,heritage:35,visitor:28,food:55,charaIP:42,nature:50,intl:25,
+  {n:"秋田",r:1,heritage:35,visitor:28,food:55,charaIP:42,nature:50,intl:25,gdp:8,celeb:25,dialect:75,
    memo:"白神山地・縄文遺跡群UNESCO（共有）。なまはげ・秋田犬のキャラIP42点が貢献。きりたんぽ・比内地鶏"},
-  {n:"山形",r:1,heritage:30,visitor:33,food:60,charaIP:18,nature:55,intl:22,
+  {n:"山形",r:1,heritage:30,visitor:33,food:60,charaIP:18,nature:55,intl:22,gdp:8,celeb:28,dialect:65,
    memo:"山寺（立石寺）・出羽三山・蔵王樹氷。食文化60点はさくらんぼ生産量60%・芋煮・山形牛が押し上げる"},
-  {n:"福島",r:1,heritage:25,visitor:32,food:55,charaIP:18,nature:48,intl:20,
+  {n:"福島",r:1,heritage:25,visitor:32,food:55,charaIP:18,nature:48,intl:20,gdp:16,celeb:30,dialect:50,
    memo:"会津若松城・磐梯山・猪苗代湖。桃生産量全国2位・喜多方ラーメン・三春滝桜（日本三大桜）"},
-  {n:"茨城",r:2,heritage:30,visitor:38,food:52,charaIP:18,nature:32,intl:18,
+  {n:"茨城",r:2,heritage:30,visitor:38,food:52,charaIP:18,nature:32,intl:18,gdp:28,celeb:35,dialect:52,
    memo:"偕楽園（日本三名園）・袋田の滝。納豆・メロン生産量全国1位。「魅力度最下位」の汚名返上を目指す"},
-  {n:"栃木",r:2,heritage:55,visitor:48,food:58,charaIP:22,nature:48,intl:38,
+  {n:"栃木",r:2,heritage:55,visitor:48,food:58,charaIP:22,nature:48,intl:38,gdp:19,celeb:28,dialect:45,
    memo:"日光東照宮・日光山内UNESCO（世界遺産）。イチゴ生産量全国1位・宇都宮餃子・那須高原リゾート"},
-  {n:"群馬",r:2,heritage:45,visitor:42,food:52,charaIP:28,nature:48,intl:28,
+  {n:"群馬",r:2,heritage:45,visitor:42,food:52,charaIP:28,nature:48,intl:28,gdp:18,celeb:32,dialect:35,
    memo:"富岡製糸場UNESCO（産業革命遺産）・草津温泉（日本三名泉・湧出量全国1位）。こんにゃく・下仁田ネギ"},
-  {n:"埼玉",r:2,heritage:18,visitor:52,food:48,charaIP:32,nature:22,intl:18,
+  {n:"埼玉",r:2,heritage:18,visitor:52,food:48,charaIP:32,nature:22,intl:18,gdp:42,celeb:38,dialect:18,
    memo:"川越（小江戸）・鉄道博物館。UNESCO遺産なし・国宝なし。川越いも・狭山茶。都市圏の恩恵で観光客多"},
-  {n:"千葉",r:2,heritage:18,visitor:75,food:52,charaIP:72,nature:32,intl:45,
+  {n:"千葉",r:2,heritage:18,visitor:75,food:52,charaIP:72,nature:32,intl:45,gdp:40,celeb:32,dialect:18,
    memo:"東京ディズニーリゾート（年間3000万人超）でキャラIP72点・成田空港の玄関口。観光客数は全国屈指"},
-  {n:"東京",r:2,heritage:70,visitor:100,food:92,charaIP:98,nature:32,intl:100,
+  {n:"東京",r:2,heritage:70,visitor:100,food:92,charaIP:98,nature:32,intl:100,gdp:100,celeb:85,dialect:12,
    memo:"小笠原諸島UNESCO・国宝89件。ゴジラ・ポケモン・秋葉原・渋谷・浅草・六本木。全カテゴリで全国トップ水準"},
-  {n:"神奈川",r:2,heritage:40,visitor:78,food:68,charaIP:75,nature:38,intl:65,
+  {n:"神奈川",r:2,heritage:40,visitor:78,food:68,charaIP:75,nature:38,intl:65,gdp:63,celeb:52,dialect:15,
    memo:"鎌倉（国宝多数）・横浜中華街・ガンダム像（横浜）。エヴァ聖地・江の島・湘南ブランド。食も充実"},
-  {n:"新潟",r:3,heritage:40,visitor:38,food:75,charaIP:18,nature:52,intl:28,
+  {n:"新潟",r:3,heritage:40,visitor:38,food:75,charaIP:18,nature:52,intl:28,gdp:20,celeb:45,dialect:55,
    memo:"佐渡島金山UNESCO（2024年登録）。コシヒカリ・日本酒（蔵元数全国最多・300以上）・のどぐろ"},
-  {n:"富山",r:3,heritage:30,visitor:32,food:65,charaIP:14,nature:62,intl:28,
+  {n:"富山",r:3,heritage:30,visitor:32,food:65,charaIP:14,nature:62,intl:28,gdp:11,celeb:22,dialect:62,
    memo:"白川郷UNESCO（岐阜と共有一部）・立山黒部アルペンルート（自然62点）。ホタルイカ・ブリ・富山湾の幸"},
-  {n:"石川",r:3,heritage:35,visitor:55,food:70,charaIP:18,nature:42,intl:45,
+  {n:"石川",r:3,heritage:35,visitor:55,food:70,charaIP:18,nature:42,intl:45,gdp:12,celeb:38,dialect:58,
    memo:"兼六園（日本三名園）・金沢城・輪島塗・加賀百万石文化。のどぐろ・治部煮・金沢おでん。伝統工芸も充実"},
-  {n:"福井",r:3,heritage:25,visitor:28,food:50,charaIP:28,nature:40,intl:18,
+  {n:"福井",r:3,heritage:25,visitor:28,food:50,charaIP:28,nature:40,intl:18,gdp:6,celeb:28,dialect:55,
    memo:"恐竜博物館（世界3大博物館）・東尋坊・永平寺。越前ガニ・越前和紙・へしこ。キャラはアニメ「恐竜」"},
-  {n:"山梨",r:3,heritage:45,visitor:55,food:62,charaIP:18,nature:75,intl:65,
+  {n:"山梨",r:3,heritage:45,visitor:55,food:62,charaIP:18,nature:75,intl:65,gdp:7,celeb:32,dialect:35,
    memo:"富士山UNESCO（静岡と共有）・武田神社。自然75点・国際知名度65点は富士山効果。ほうとう・甲州ワイン・桃"},
-  {n:"長野",r:3,heritage:35,visitor:60,food:65,charaIP:25,nature:80,intl:50,
+  {n:"長野",r:3,heritage:35,visitor:60,food:65,charaIP:25,nature:80,intl:50,gdp:19,celeb:48,dialect:30,
    memo:"善光寺・松本城（国宝）・上高地・白馬スキーリゾート。自然80点は全国最高水準。そば・おやき・リンゴ"},
-  {n:"岐阜",r:3,heritage:50,visitor:48,food:60,charaIP:35,nature:55,intl:45,
+  {n:"岐阜",r:3,heritage:50,visitor:48,food:60,charaIP:35,nature:55,intl:45,gdp:17,celeb:35,dialect:35,
    memo:"白川郷UNESCO（富山と共有）・下呂温泉（日本三名泉）・飛騨高山の古い町並み。飛騨牛・鶏ちゃん・みたらし団子"},
-  {n:"静岡",r:3,heritage:50,visitor:65,food:75,charaIP:28,nature:75,intl:60,
+  {n:"静岡",r:3,heritage:50,visitor:65,food:75,charaIP:28,nature:75,intl:60,gdp:32,celeb:45,dialect:28,
    memo:"富士山UNESCO（山梨と共有）・韮山反射炉（産業革命遺産）。茶生産量全国1位・うなぎ・わさび・桜エビ"},
-  {n:"愛知",r:3,heritage:45,visitor:70,food:80,charaIP:58,nature:33,intl:55,
+  {n:"愛知",r:3,heritage:45,visitor:70,food:80,charaIP:58,nature:33,intl:55,gdp:68,celeb:72,dialect:38,
    memo:"名古屋城・国宝59件・ジブリパーク（全国最大級アニメIP）・トヨタ産業技術記念館。ひつまぶし・みそかつ・手羽先"},
-  {n:"三重",r:4,heritage:50,visitor:55,food:70,charaIP:18,nature:45,intl:55,
+  {n:"三重",r:4,heritage:50,visitor:55,food:70,charaIP:18,nature:45,intl:55,gdp:17,celeb:32,dialect:42,
    memo:"伊勢神宮（日本最高位の社格・年間約800万人参拝）・紀伊山地UNESCO一部・熊野古道。松阪牛・伊勢エビ"},
-  {n:"滋賀",r:4,heritage:55,visitor:38,food:52,charaIP:18,nature:55,intl:33,
+  {n:"滋賀",r:4,heritage:55,visitor:38,food:52,charaIP:18,nature:55,intl:33,gdp:15,celeb:28,dialect:35,
    memo:"延暦寺・日吉大社（古都京都UNESCO構成資産）・彦根城（国宝）・国宝54件。琵琶湖（国内最大の湖）"},
-  {n:"京都",r:4,heritage:95,visitor:88,food:80,charaIP:68,nature:52,intl:95,
+  {n:"京都",r:4,heritage:95,visitor:88,food:80,charaIP:68,nature:52,intl:95,gdp:24,celeb:65,dialect:35,
    memo:"UNESCO構成資産17件・国宝238件（全国1位）。金閣寺・清水寺・嵐山・舞妓・祇園・伏見稲荷。圧倒的な文化密度"},
-  {n:"大阪",r:4,heritage:65,visitor:85,food:90,charaIP:62,nature:22,intl:80,
+  {n:"大阪",r:4,heritage:65,visitor:85,food:90,charaIP:62,nature:22,intl:80,gdp:72,celeb:62,dialect:42,
    memo:"百舌鳥・古市古墳群UNESCO・国宝59件・USJ（ハリーポッター・マリオ）。たこ焼き・お好み焼き・くいだおれ文化"},
-  {n:"兵庫",r:4,heritage:60,visitor:65,food:70,charaIP:35,nature:38,intl:60,
+  {n:"兵庫",r:4,heritage:60,visitor:65,food:70,charaIP:35,nature:38,intl:60,gdp:38,celeb:52,dialect:38,
    memo:"姫路城UNESCO（単体世界遺産・国宝）・有馬温泉（日本三名泉）・神戸港・異人館。神戸牛・明石焼き"},
-  {n:"奈良",r:4,heritage:90,visitor:60,food:52,charaIP:45,nature:38,intl:80,
+  {n:"奈良",r:4,heritage:90,visitor:60,food:52,charaIP:45,nature:38,intl:80,gdp:9,celeb:38,dialect:38,
    memo:"法隆寺＋古都奈良の2つのUNESCO・国宝233件（全国2位）・東大寺大仏・野生の鹿・飛鳥・吉野の桜"},
-  {n:"和歌山",r:4,heritage:55,visitor:38,food:65,charaIP:18,nature:60,intl:38,
+  {n:"和歌山",r:4,heritage:55,visitor:38,food:65,charaIP:18,nature:60,intl:38,gdp:7,celeb:42,dialect:48,
    memo:"紀伊山地UNESCO（三重・奈良と共有）・高野山・熊野古道・那智の滝。みかん・梅（生産量1位）"},
-  {n:"鳥取",r:5,heritage:18,visitor:26,food:48,charaIP:62,nature:45,intl:22,
+  {n:"鳥取",r:5,heritage:18,visitor:26,food:48,charaIP:62,nature:45,intl:22,gdp:4,celeb:20,dialect:48,
    memo:"名探偵コナン（青山剛昌の故郷・境港）・水木しげる（ゲゲゲの鬼太郎）でキャラIP62点が最大の武器。松葉ガニ"},
-  {n:"島根",r:5,heritage:45,visitor:28,food:48,charaIP:25,nature:45,intl:28,
+  {n:"島根",r:5,heritage:45,visitor:28,food:48,charaIP:25,nature:45,intl:28,gdp:5,celeb:30,dialect:62,
    memo:"石見銀山UNESCO・出雲大社（縁結びの神・社格最高位のひとつ）。宍道湖のしじみ・のどぐろ・出雲そば"},
-  {n:"岡山",r:5,heritage:40,visitor:42,food:65,charaIP:42,nature:38,intl:32,
+  {n:"岡山",r:5,heritage:40,visitor:42,food:65,charaIP:42,nature:38,intl:32,gdp:17,celeb:35,dialect:40,
    memo:"後楽園（日本三名園）・岡山城・桃太郎（キャラIP）。桃生産量全国2位・マスカット・きびだんご・デミカツ丼"},
-  {n:"広島",r:5,heritage:80,visitor:60,food:62,charaIP:28,nature:38,intl:80,
+  {n:"広島",r:5,heritage:80,visitor:60,food:62,charaIP:28,nature:38,intl:80,gdp:25,celeb:48,dialect:40,
    memo:"原爆ドーム＋厳島神社の2つのUNESCO（世界的認知度大）。国際知名度80点は全国有数。お好み焼き・牡蠣・もみじ饅頭"},
-  {n:"山口",r:5,heritage:30,visitor:32,food:58,charaIP:18,nature:40,intl:22,
-   memo:"角島大橋（絶景）・秋吉台・秋芳洞・萩（産業革命遺産一部）。フグ（下関・ふく）・岩国寿司。明治維新の故郷"},
-  {n:"徳島",r:6,heritage:25,visitor:28,food:45,charaIP:28,nature:45,intl:18,
+  {n:"山口",r:5,heritage:30,visitor:32,food:58,charaIP:18,nature:40,intl:22,gdp:13,celeb:82,dialect:48,
+   memo:"角島大橋（絶景）・秋吉台・秋芳洞・萩（産業革命遺産一部）。伊藤博文・山縣有朋・高杉晋作ら維新の志士の故郷。フグ"},
+  {n:"徳島",r:6,heritage:25,visitor:28,food:45,charaIP:28,nature:45,intl:18,gdp:6,celeb:22,dialect:45,
    memo:"阿波踊り（日本三大盆踊り）・鳴門の渦潮・四国八十八か所霊場の起点。すだち生産量98%・なると金時"},
-  {n:"香川",r:6,heritage:30,visitor:38,food:72,charaIP:30,nature:33,intl:28,
+  {n:"香川",r:6,heritage:30,visitor:38,food:72,charaIP:30,nature:33,intl:28,gdp:8,celeb:28,dialect:38,
    memo:"讃岐うどん（全国的食ブランド・食72点で四国最高）・直島（現代アートの聖地）・金刀比羅宮。オリーブ・骨付鳥"},
-  {n:"愛媛",r:6,heritage:30,visitor:36,food:60,charaIP:24,nature:45,intl:28,
+  {n:"愛媛",r:6,heritage:30,visitor:36,food:60,charaIP:24,nature:45,intl:28,gdp:10,celeb:35,dialect:42,
    memo:"道後温泉（日本最古・夏目漱石「坊っちゃん」の舞台）・松山城・四国遍路。みかん生産量全国1位・伊予牛"},
-  {n:"高知",r:6,heritage:25,visitor:28,food:55,charaIP:35,nature:55,intl:22,
+  {n:"高知",r:6,heritage:25,visitor:28,food:55,charaIP:35,nature:55,intl:22,gdp:5,celeb:52,dialect:52,
    memo:"桂浜・坂本龍馬（幕末最大のキャラIP・35点）・四万十川・仁淀川（水質日本一）。かつおのたたき・土佐文旦"},
-  {n:"福岡",r:7,heritage:45,visitor:75,food:85,charaIP:35,nature:32,intl:58,
+  {n:"福岡",r:7,heritage:45,visitor:75,food:85,charaIP:35,nature:32,intl:58,gdp:35,celeb:48,dialect:40,
    memo:"官営八幡製鐵所UNESCO一部・太宰府天満宮・国宝22件。博多ラーメン・もつ鍋・明太子・屋台文化。観光客多"},
-  {n:"佐賀",r:7,heritage:30,visitor:25,food:45,charaIP:18,nature:28,intl:18,
+  {n:"佐賀",r:7,heritage:30,visitor:25,food:45,charaIP:18,nature:28,intl:18,gdp:6,celeb:25,dialect:45,
    memo:"有田焼（日本磁器の発祥・世界輸出）・吉野ヶ里遺跡・産業革命遺産一部・バルーンフェスタ。佐賀牛・呼子のイカ"},
-  {n:"長崎",r:7,heritage:65,visitor:45,food:55,charaIP:25,nature:40,intl:50,
+  {n:"長崎",r:7,heritage:65,visitor:45,food:55,charaIP:25,nature:40,intl:50,gdp:10,celeb:40,dialect:48,
    memo:"潜伏キリシタン関連遺産＋産業革命遺産（軍艦島等）の2つのUNESCO関与。グラバー園・出島。長崎ちゃんぽん"},
-  {n:"熊本",r:7,heritage:40,visitor:50,food:65,charaIP:78,nature:60,intl:45,
+  {n:"熊本",r:7,heritage:40,visitor:50,food:65,charaIP:78,nature:60,intl:45,gdp:14,celeb:38,dialect:48,
    memo:"くまモン（ゆるキャラ経済効果最大・全国認知99%・海外展開済み）でキャラIP78点。熊本城・阿蘇山（世界最大級カルデラ）"},
-  {n:"大分",r:7,heritage:30,visitor:45,food:65,charaIP:18,nature:52,intl:35,
+  {n:"大分",r:7,heritage:30,visitor:45,food:65,charaIP:18,nature:52,intl:35,gdp:11,celeb:28,dialect:48,
    memo:"別府温泉（源泉数・湧出量とも世界一）・地獄めぐり・産業革命遺産一部。関あじ・関さば・かぼす"},
-  {n:"宮崎",r:7,heritage:25,visitor:36,food:60,charaIP:20,nature:55,intl:25,
+  {n:"宮崎",r:7,heritage:25,visitor:36,food:60,charaIP:20,nature:55,intl:25,gdp:8,celeb:22,dialect:50,
    memo:"天孫降臨神話の地（高千穂峡）・日南海岸（フェニックス）。宮崎牛・地頭鶏・マンゴー生産量全国1位"},
-  {n:"鹿児島",r:7,heritage:65,visitor:50,food:65,charaIP:25,nature:65,intl:50,
-   memo:"屋久島＋奄美大島等UNESCO＋産業革命遺産の3サイト関与。桜島（常時噴火・自然65点）。黒豚・黒牛・焼酎"},
-  {n:"沖縄",r:7,heritage:60,visitor:72,food:68,charaIP:40,nature:70,intl:75,
-   memo:"琉球王国グスク群UNESCO・美ら海水族館・独自文化・言語・三線・エイサー。リゾート地として国際知名度75点"},
+  {n:"鹿児島",r:7,heritage:65,visitor:50,food:65,charaIP:25,nature:65,intl:50,gdp:12,celeb:78,dialect:90,
+   memo:"屋久島＋奄美大島等UNESCO＋産業革命遺産の3サイト関与。桜島（常時噴火・自然65点）。西郷隆盛・大久保利通を輩出。黒豚・焼酎"},
+  {n:"沖縄",r:7,heritage:60,visitor:72,food:68,charaIP:40,nature:70,intl:75,gdp:9,celeb:22,dialect:100,
+   memo:"琉球王国グスク群UNESCO・美ら海水族館・独自文化・言語・三線・エイサー。方言は琉球語で別言語レベル。リゾート地として国際知名度75点"},
 ];
 
-function calcPow(d){return Math.round(CATS.reduce((s,c)=>s+d[c.key]*c.w,0)*15000);}
+function calcPow(d){return Math.round(CATS.reduce((s,c)=>s+d[c.key]*c.w,0)*11000);}
 function fmt(n){return n>=10000?(n/10000).toFixed(1)+'万':n.toLocaleString();}
 
 // Attach power to each

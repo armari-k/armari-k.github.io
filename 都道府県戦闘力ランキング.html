@@ -193,13 +193,6 @@ footer .aaa-mini{font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-siz
   </div>
 </div>
 
-<!-- Footer -->
-<div class="footer">
-  各スコアは観光データ・UNESCO世界遺産登録数・国宝件数・<br>
-  国内外観光客統計・県内総生産・著名人データ・方言研究等を参考に推計した独自指標です（9カテゴリ）<br><br>
-  © 都道府県戦闘力ランキング
-</div>
-
 <script>
 const R_NAME=["北海道","東北","関東","中部","近畿","中国","四国","九州・沖縄"];
 const R_COL=["#5DCAA5","#85B7EB","#7F77DD","#EF9F27","#D4537E","#94918a","#97C459","#F0997B"];
@@ -475,6 +468,7 @@ function openModal(name){
     </div>
     <div class="cats-section">${catRows}</div>
     <div class="memo-box"><strong>📋 戦闘力の源泉：</strong><br>${d.memo}</div>
+    ${d.n==='北海道'?`<a href="北海道振興局ランキング.html" style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:12px 16px;background:var(--bg3);border-radius:10px;border:1px solid #5DCAA533;text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='#5DCAA5'" onmouseout="this.style.borderColor='#5DCAA533'"><span style="font-size:12px;color:#5DCAA5;font-weight:700">🗺 北海道を14振興局ごとに見る</span><span style="font-size:12px;color:#5DCAA5">→</span></a>`:''}
     ${dialectStars(d)}`;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';

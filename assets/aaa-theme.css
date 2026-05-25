@@ -1,0 +1,412 @@
+/* AAA shared page shell. Page-specific tools keep their own functional CSS. */
+:root{
+  --aaa-bg:#0c0809;
+  --aaa-bg-soft:#140d0f;
+  --aaa-panel:#181012;
+  --aaa-panel-2:#201519;
+  --aaa-line:#38232a;
+  --aaa-line-soft:#2a1b20;
+  --aaa-text:#f2e9e5;
+  --aaa-sub:#c0aaa0;
+  --aaa-muted:#8b7068;
+  --aaa-red:#b7354b;
+  --aaa-red-soft:#e45a6f;
+  --aaa-gold:#d7b46f;
+  --aaa-gold-soft:#f0d99a;
+  --aaa-accent:var(--aaa-gold);
+  --aaa-accent-soft:var(--aaa-gold-soft);
+  --aaa-accent-deep:#6b1e2d;
+  --aaa-accent-glow:#d7b46f22;
+  --aaa-font-body:'Noto Sans JP',sans-serif;
+  --aaa-font-display:'Cormorant Garamond',serif;
+  --aaa-font-label:'Cinzel',serif;
+  --aaa-font-logo:'Bebas Neue',sans-serif;
+  --aaa-font-data:'Sora',sans-serif;
+}
+
+.theme-green{
+  --aaa-bg:#080f0a;
+  --aaa-bg-soft:#0d1a10;
+  --aaa-panel:#0d1a10;
+  --aaa-panel-2:#112216;
+  --aaa-line:#1a3020;
+  --aaa-line-soft:#183522;
+  --aaa-text:#ddeee4;
+  --aaa-sub:#b5d2bf;
+  --aaa-muted:#6f927a;
+  --aaa-accent:#6bd08b;
+  --aaa-accent-soft:#92ecae;
+  --aaa-accent-deep:#1a4d30;
+  --aaa-accent-glow:#2a8e4c26;
+  --bg:var(--aaa-bg);
+  --bg2:var(--aaa-bg-soft);
+  --bg3:var(--aaa-panel-2);
+  --dim:var(--aaa-line);
+  --muted:var(--aaa-muted);
+  --text:var(--aaa-text);
+  --light:#f0faf4;
+  --green:#2d7a4f;
+  --green2:#3fa068;
+  --green3:#1a4d30;
+  --emerald:var(--aaa-accent);
+}
+
+.theme-blue{
+  --aaa-bg:#080b12;
+  --aaa-bg-soft:#0d1220;
+  --aaa-panel:#101827;
+  --aaa-panel-2:#151f32;
+  --aaa-line:#213454;
+  --aaa-line-soft:#18263d;
+  --aaa-text:#e6ecf8;
+  --aaa-sub:#bdcadf;
+  --aaa-muted:#7c8eaa;
+  --aaa-accent:#66a7e8;
+  --aaa-accent-soft:#9fd0ff;
+  --aaa-accent-deep:#18314d;
+  --aaa-accent-glow:#1b5b9526;
+}
+
+body.aaa-page{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 50% -10%, color-mix(in srgb, var(--aaa-accent-deep) 58%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--aaa-bg-soft) 86%, #000 14%) 0%, var(--aaa-bg) 45%, #070506 100%);
+  color:var(--aaa-text);
+  font-family:var(--aaa-font-body);
+  overflow-x:hidden;
+}
+
+body.aaa-page::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.032;
+  pointer-events:none;
+  z-index:0;
+}
+
+.aaa-page .watermark{
+  position:fixed;
+  right:clamp(18px,3.2vw,52px);
+  bottom:clamp(18px,3vw,48px);
+  width:clamp(320px,35vw,540px);
+  height:auto;
+  aspect-ratio:1;
+  background:url('AAA_logo_watermark.png') center/contain no-repeat;
+  opacity:.075;
+  mix-blend-mode:screen;
+  pointer-events:none;
+  z-index:0;
+}
+
+.aaa-page .blob{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(130px);
+  opacity:.14;
+  pointer-events:none;
+  z-index:0;
+  animation:blobDrift 22s ease-in-out infinite alternate;
+}
+.aaa-page .blob1{width:650px;height:500px;background:var(--aaa-accent-deep);top:-170px;left:-190px;right:auto}
+.aaa-page .blob2{width:360px;height:360px;background:color-mix(in srgb, var(--aaa-accent) 44%, #000 56%);bottom:-90px;right:-80px;left:auto;animation-delay:-10s}
+.aaa-page .blob3{width:250px;height:250px;background:var(--aaa-gold);top:45%;left:55%;opacity:.055;animation-delay:-5s}
+
+@keyframes blobDrift{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(35px,25px) scale(1.06)}
+}
+
+.aaa-page .v-line{
+  position:fixed;
+  left:40px;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,var(--aaa-accent-deep) 30%,var(--aaa-accent-deep) 70%,transparent);
+  opacity:.38;
+  z-index:0;
+}
+
+.aaa-page .back-link{
+  position:relative;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:14px 18px 0;
+  color:var(--aaa-muted);
+  font-family:var(--aaa-font-label);
+  font-size:11px;
+  letter-spacing:2px;
+  text-decoration:none;
+  transition:color .2s;
+}
+.aaa-page .back-link:hover{color:var(--aaa-accent-soft)}
+
+.aaa-page .hero{
+  position:relative;
+  z-index:1;
+  overflow:hidden;
+  text-align:center;
+  padding:64px 20px 48px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, var(--aaa-accent-glow) 0%, transparent 70%);
+}
+.aaa-page .hero::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:0;
+  width:min(420px,82vw);
+  height:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,var(--aaa-red),var(--aaa-accent),var(--aaa-red),transparent);
+  opacity:.58;
+}
+.aaa-page .hero-bg{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  opacity:.055;
+  pointer-events:none;
+}
+.aaa-page .hero-bg span{
+  position:absolute;
+  color:#fff;
+  font-family:var(--aaa-font-body);
+  font-size:80px;
+  font-weight:900;
+  animation:aaaGlyphDrift 20s linear infinite;
+}
+.aaa-page .aaa-blueprint-bg{
+  opacity:.34;
+  mix-blend-mode:screen;
+}
+.aaa-page .aaa-blueprint-bg::before{
+  content:'';
+  position:absolute;
+  inset:12% 10%;
+  background:
+    linear-gradient(90deg, transparent 0 49.5%, color-mix(in srgb, var(--aaa-accent) 42%, transparent) 49.5% 50.5%, transparent 50.5% 100%),
+    linear-gradient(0deg, transparent 0 49.5%, color-mix(in srgb, var(--aaa-accent) 28%, transparent) 49.5% 50.5%, transparent 50.5% 100%),
+    repeating-linear-gradient(90deg, transparent 0 58px, color-mix(in srgb, var(--aaa-accent) 16%, transparent) 59px 60px),
+    repeating-linear-gradient(0deg, transparent 0 48px, color-mix(in srgb, var(--aaa-accent) 12%, transparent) 49px 50px);
+  border:1px solid color-mix(in srgb, var(--aaa-accent) 24%, transparent);
+  opacity:.55;
+  transform:skewY(-2deg);
+  animation:aaaBlueprintGrid 12s ease-in-out infinite alternate;
+}
+.aaa-page .aaa-blueprint-bg::after{
+  content:'';
+  position:absolute;
+  left:18%;
+  top:24%;
+  width:64%;
+  height:44%;
+  background:
+    linear-gradient(24deg, transparent 0 49.6%, color-mix(in srgb, var(--aaa-gold) 28%, transparent) 49.6% 50.4%, transparent 50.4%),
+    linear-gradient(156deg, transparent 0 49.6%, color-mix(in srgb, var(--aaa-red) 26%, transparent) 49.6% 50.4%, transparent 50.4%);
+  opacity:.7;
+  animation:aaaBlueprintLines 8s ease-in-out infinite alternate;
+}
+.aaa-page .aaa-blueprint-bg .bp-node{
+  position:absolute;
+  width:7px;
+  height:7px;
+  border:1px solid var(--aaa-accent);
+  border-radius:50%;
+  background:var(--aaa-bg);
+  box-shadow:0 0 18px color-mix(in srgb, var(--aaa-accent) 70%, transparent);
+  animation:aaaNodeFloat 6.5s ease-in-out infinite;
+}
+.aaa-page .aaa-blueprint-bg .bp-node::after{
+  content:'';
+  position:absolute;
+  inset:2px;
+  border-radius:50%;
+  background:var(--aaa-accent);
+}
+.aaa-page .aaa-blueprint-bg .n1{left:18%;top:30%}
+.aaa-page .aaa-blueprint-bg .n2{left:38%;top:18%;animation-delay:-1s}
+.aaa-page .aaa-blueprint-bg .n3{left:62%;top:28%;animation-delay:-2.2s}
+.aaa-page .aaa-blueprint-bg .n4{left:78%;top:56%;animation-delay:-3.4s}
+.aaa-page .aaa-blueprint-bg .n5{left:28%;top:66%;animation-delay:-4.6s}
+.aaa-page .aaa-blueprint-bg .bp-label{
+  position:absolute;
+  color:color-mix(in srgb, var(--aaa-accent-soft) 62%, transparent);
+  font-family:var(--aaa-font-label);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  animation:aaaBlueprintLabel 9s ease-in-out infinite alternate;
+}
+.aaa-page .aaa-blueprint-bg .l1{left:14%;top:18%}
+.aaa-page .aaa-blueprint-bg .l2{right:13%;top:20%;animation-delay:-2s}
+.aaa-page .aaa-blueprint-bg .l3{left:20%;bottom:18%;animation-delay:-4s}
+.aaa-page .aaa-blueprint-bg .l4{right:18%;bottom:21%;animation-delay:-6s}
+@keyframes aaaBlueprintGrid{
+  from{transform:translate3d(-22px,-10px,0) skewY(-2deg)}
+  to{transform:translate3d(24px,12px,0) skewY(-2deg)}
+}
+@keyframes aaaBlueprintLines{
+  0%{transform:translate3d(28px,-8px,0) rotate(.5deg);opacity:.34}
+  50%{transform:translate3d(-18px,10px,0) rotate(-.6deg);opacity:.9}
+  100%{transform:translate3d(-32px,18px,0) rotate(.4deg);opacity:.48}
+}
+@keyframes aaaNodeFloat{
+  0%,100%{transform:translate3d(-8px,7px,0) scale(.95);opacity:.62}
+  35%{transform:translate3d(10px,-12px,0) scale(1.2);opacity:1}
+  70%{transform:translate3d(18px,8px,0) scale(1.05);opacity:.78}
+}
+@keyframes aaaBlueprintLabel{
+  from{transform:translate3d(-12px,4px,0);opacity:.38}
+  to{transform:translate3d(12px,-6px,0);opacity:.82}
+}
+@keyframes aaaGlyphDrift{
+  0%{transform:translateY(120%) rotate(0deg)}
+  100%{transform:translateY(-120%) rotate(15deg)}
+}
+
+.aaa-page .eyebrow{
+  display:inline-block;
+  margin-bottom:20px;
+  padding:4px 14px;
+  border:1px solid color-mix(in srgb, var(--aaa-accent) 50%, transparent);
+  border-radius:20px;
+  color:var(--aaa-accent);
+  font-family:var(--aaa-font-label);
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+.aaa-page h1{
+  margin-bottom:12px;
+  background:linear-gradient(135deg,#fff 15%,var(--aaa-accent-soft) 58%,var(--aaa-accent) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--aaa-text);
+  font-family:var(--aaa-font-display);
+  font-size:clamp(28px,5vw,54px);
+  font-weight:600;
+  line-height:1.1;
+  letter-spacing:0;
+}
+
+.aaa-page .hero-sub{
+  max-width:620px;
+  margin:0 auto 12px;
+  color:var(--aaa-sub);
+  font-size:13px;
+  line-height:1.85;
+}
+
+.aaa-page .page{
+  position:relative;
+  z-index:1;
+  max-width:820px;
+  margin:0 auto;
+  padding:0 20px 100px;
+}
+
+.aaa-page .divider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:36px 0 18px;
+}
+.aaa-page .divider::before{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--aaa-accent-deep))}
+.aaa-page .divider::after{content:'';flex:1;height:1px;background:linear-gradient(270deg,transparent,var(--aaa-accent-deep))}
+.aaa-page .divider span{
+  padding:4px 14px;
+  border:1px solid var(--aaa-accent-deep);
+  border-radius:20px;
+  background:var(--aaa-bg-soft);
+  color:var(--aaa-accent);
+  font-family:var(--aaa-font-label);
+  font-size:10px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.aaa-page footer,
+.aaa-page .footer{
+  margin-top:20px;
+  padding:24px 20px 90px;
+  border-top:1px solid var(--aaa-line-soft);
+  color:var(--aaa-muted);
+  text-align:center;
+  font-size:11px;
+  line-height:2.4;
+}
+.aaa-page .aaa-ornament{
+  margin:58px 0 0;
+  color:var(--aaa-accent-deep);
+  text-align:center;
+  font-size:11px;
+  letter-spacing:8px;
+}
+.aaa-page footer .aaa-mini,
+.aaa-page .footer .aaa-mini{
+  display:block;
+  margin-bottom:4px;
+  background:linear-gradient(90deg,var(--aaa-red),var(--aaa-gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-family:var(--aaa-font-logo);
+  font-size:13px;
+  letter-spacing:4px;
+}
+
+@media(max-width:600px){
+  .aaa-page .v-line{display:none}
+  .aaa-page .watermark{width:min(82vw,320px);right:10px;bottom:18px;opacity:.07}
+  .aaa-page .back-link{padding-left:16px}
+  .aaa-page .hero{padding:52px 18px 40px}
+  .aaa-page .hero-bg span{font-size:64px}
+  .aaa-page .aaa-blueprint-bg::before{inset:18% 4%}
+  .aaa-page .aaa-blueprint-bg::after{left:10%;width:80%}
+  .aaa-page .aaa-blueprint-bg .bp-label{font-size:9px;letter-spacing:2px}
+  .aaa-page .page{padding-left:18px;padding-right:18px}
+  .aaa-page .item-row{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:8px 10px;
+  }
+  .aaa-page .item-left,
+  .aaa-page .item-label{
+    grid-column:1 / -1;
+    width:auto;
+    min-width:0;
+  }
+  .aaa-page .item-slider{
+    grid-column:1 / -1;
+    width:100%;
+    min-width:0;
+  }
+  .aaa-page .item-val-wrap{
+    grid-column:1;
+    align-items:flex-start;
+    min-width:0;
+  }
+  .aaa-page .roll-small{
+    grid-column:2;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .aaa-page .aaa-blueprint-bg::before,
+  .aaa-page .aaa-blueprint-bg::after,
+  .aaa-page .aaa-blueprint-bg .bp-node{
+    animation:none;
+  }
+}
+

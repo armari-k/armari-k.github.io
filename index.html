@@ -256,6 +256,7 @@ a{color:inherit}
 }
 .card{
   position:relative;
+  isolation:isolate;
   display:flex;
   min-height:178px;
   flex-direction:column;
@@ -273,20 +274,43 @@ a{color:inherit}
   content:'';
   position:absolute;
   inset:0;
+  z-index:0;
   background:linear-gradient(115deg, var(--accent-bg, transparent), transparent 54%);
   opacity:.55;
   pointer-events:none;
+}
+.card::after{
+  content:'';
+  position:absolute;
+  right:-56px;
+  bottom:-72px;
+  z-index:0;
+  width:228px;
+  height:228px;
+  background-image:var(--card-logo, none);
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:contain;
+  opacity:.18;
+  mix-blend-mode:screen;
+  filter:saturate(.92) contrast(1.08);
+  pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease;
 }
 .card:hover{
   transform:translateY(-4px);
   border-color:var(--accent,var(--gold));
   background:linear-gradient(180deg, #211519 0%, #130c0f 100%);
 }
+.card:hover::after{
+  opacity:.25;
+  transform:translate(-4px,-4px) scale(1.04);
+}
 .card > *{position:relative;z-index:1}
 .card-meta{
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:flex-start;
   gap:10px;
   color:var(--accent,var(--gold));
   font-size:10px;
@@ -310,27 +334,11 @@ a{color:inherit}
   height:0;
   overflow:hidden;
 }
-.card-icon{
-  display:grid;
-  place-items:center;
-  width:30px;
-  height:30px;
-  flex:0 0 auto;
-  border:1px solid color-mix(in srgb, var(--accent,var(--gold)) 42%, transparent);
-  border-radius:50%;
-  background:color-mix(in srgb, var(--accent,var(--gold)) 9%, transparent);
-  color:var(--accent,var(--gold));
-  box-shadow:0 0 18px color-mix(in srgb, var(--accent,var(--gold)) 16%, transparent);
-}
-.card-icon svg{
-  width:18px;
-  height:18px;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:1.7;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
+.logo-body{--card-logo:url('assets/card-logos/body-profile.png')}
+.logo-big-five{--card-logo:url('assets/card-logos/big-five.png')}
+.logo-mbti{--card-logo:url('assets/card-logos/mbti.png')}
+.logo-five-elements{--card-logo:url('assets/card-logos/five-elements.png')}
+.logo-prefecture{--card-logo:url('assets/card-logos/prefecture-power-ranking.png')}
 .card h3{
   font-family:'Cormorant Garamond',serif;
   color:var(--text);
@@ -386,8 +394,7 @@ a{color:inherit}
 }
 .soon .card-meta,
 .soon h3,
-.soon p,
-.soon .card-icon{
+.soon p{
   opacity:.58;
 }
 .soon .card-action{
@@ -624,20 +631,20 @@ a{color:inherit}
       <p class="section-note"><span>初めて来た人にも渡しやすい、</span><span>いまのおすすめ入口です。</span></p>
     </div>
     <div class="cards">
-      <a class="card green" href="body-profile-tool.html">
-        <div class="card-meta"><span>Body / Character</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-dice"></use></svg></span></div>
+      <a class="card green logo-body" href="body-profile-tool.html">
+        <div class="card-meta"><span>Body / Character</span></div>
         <h3>身体感覚プロフィールツール</h3>
         <p>利き腕・血液型・五感・欲求・味覚の好みをダイスで決定。キャラクターの輪郭を偶然から作れます。</p>
         <div class="card-action">VIEW</div>
       </a>
-      <a class="card green" href="big-five-tool.html">
-        <div class="card-meta"><span>Personality</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-bars"></use></svg></span></div>
+      <a class="card green logo-big-five" href="big-five-tool.html">
+        <div class="card-meta"><span>Personality</span></div>
         <h3>ビッグファイブ<br>性格設定ツール</h3>
         <p>5つの性格軸をダイスで決定。キャラクターの考え方やふるまいを掘る入口に。</p>
         <div class="card-action">VIEW</div>
       </a>
-      <a class="card blue" href="prefecture-power-ranking.html">
-        <div class="card-meta"><span>Data / Ranking</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-map"></use></svg></span></div>
+      <a class="card blue logo-prefecture" href="prefecture-power-ranking.html">
+        <div class="card-meta"><span>Data / Ranking</span></div>
         <h3>都道府県<br>戦闘力ランキング</h3>
         <p>観光・食・自然・文化などから算出した47都道府県の総合戦闘力。地域ネタで遊ぶランキングです。</p>
         <div class="card-action">VIEW</div>
@@ -654,26 +661,26 @@ a{color:inherit}
       <p class="section-note"><span>キャラ設定を決める。迷ったところをダイスに任せる。</span><span>設定の種を増やすためのツール群。</span></p>
     </div>
     <div class="cards">
-      <a class="card green" href="body-profile-tool.html">
-        <div class="card-meta"><span>Body</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-dice"></use></svg></span></div>
+      <a class="card green logo-body" href="body-profile-tool.html">
+        <div class="card-meta"><span>Body</span></div>
         <h3>身体感覚プロフィールツール</h3>
         <p>身体的な特徴や感覚、欲求の傾向をランダムに決めます。</p>
         <div class="card-action">VIEW</div>
       </a>
-      <a class="card green" href="big-five-tool.html">
-        <div class="card-meta"><span>Personality</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-bars"></use></svg></span></div>
+      <a class="card green logo-big-five" href="big-five-tool.html">
+        <div class="card-meta"><span>Personality</span></div>
         <h3>ビッグファイブ<br>性格設定ツール</h3>
         <p>5つの性格軸をダイスで決定。TRPGキャラクターの考え方やふるまいを掘る入口に。</p>
         <div class="card-action">VIEW</div>
       </a>
-      <a class="card green" href="mbti-tool.html">
-        <div class="card-meta"><span>MBTI / Cognitive</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-brain"></use></svg></span></div>
+      <a class="card green logo-mbti" href="mbti-tool.html">
+        <div class="card-meta"><span>MBTI / Cognitive</span></div>
         <h3>MBTI<br>性格タイプツール</h3>
         <p>16タイプとA/T、認知機能を可視化して性格の方向性を作ります。</p>
         <div class="card-action">VIEW</div>
       </a>
-      <a class="card green" href="five-elements-tool.html">
-        <div class="card-meta"><span>Five Elements</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-elements"></use></svg></span></div>
+      <a class="card green logo-five-elements" href="five-elements-tool.html">
+        <div class="card-meta"><span>Five Elements</span></div>
         <h3>五行<br>オーラバランスツール</h3>
         <p>木・火・土・金・水のバランスから、キャラクターの雰囲気を見ます。</p>
         <div class="card-action">VIEW</div>
@@ -690,14 +697,14 @@ a{color:inherit}
       <p class="section-note"><span>都道府県や地域ネタを、</span><span>ランキングやカードゲームの形にして遊ぶ場所。</span></p>
     </div>
     <div class="cards">
-      <a class="card blue" href="prefecture-power-ranking.html">
-        <div class="card-meta"><span>47 Prefectures</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-map"></use></svg></span></div>
+      <a class="card blue logo-prefecture" href="prefecture-power-ranking.html">
+        <div class="card-meta"><span>47 Prefectures</span></div>
         <h3>都道府県<br>戦闘力ランキング</h3>
         <p>世界遺産・観光客数・食文化・キャラIP・自然景観・国際知名度から算出。</p>
         <div class="card-action">VIEW</div>
       </a>
       <article class="card blue soon idea-card">
-        <div class="card-meta"><span>Works in Progress</span><span class="card-icon" aria-hidden="true"><svg><use href="#icon-cards"></use></svg></span></div>
+        <div class="card-meta"><span>Works in Progress</span></div>
         <h3>都道府県<br>カードバトル</h3>
         <p>47都道府県の観光力・文化・食・キャラIPを武器に戦うカードゲーム。まずは進捗ページとして見せ方を準備中です。</p>
         <div class="card-action">PREPARING</div>
